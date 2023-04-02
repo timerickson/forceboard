@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <style>
+    div#d3target {
+      border: 2px chocolate solid;
+      /* width: 100px;
+      height: 100px; */
+    }
+  </style>
+  <script src="standalone.module.js" type="module"></script>
+  <script src="app.mjs" type="module"></script>
+  <script type="module">
+    import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+    const d3Path = 'div#d3target'
+    const div = d3.select(d3Path);
+    console.log(d3Path, div.length);
+  </script>
+</head>
+
+<body>
+</body>
+
+</html>
