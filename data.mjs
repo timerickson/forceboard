@@ -16,6 +16,7 @@ export class Data {
     itemRelationships = {}
     relationships = []
     stateId = 0
+
     addItem(item) {
         const id = itemId(item);
 
@@ -24,6 +25,7 @@ export class Data {
         this.itemRelationships[id] = [];
         this.stateId++;
     }
+
     addRelationship(idA, idB) {
         if (idA === idB) {
             throw new Error(`ids must be different (${idA}, ${idB})`);

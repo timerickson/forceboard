@@ -15,6 +15,9 @@ class App extends Component {
             data: new Data(),
         };
     }
+
+    textInput = null
+
     componentDidMount() {
         try {
             injectTestCommands((cmd) => this.processCommand(cmd));
@@ -26,6 +29,7 @@ class App extends Component {
             }
         }
     }
+
     processCommand(cmdText = this.state.input) {
         console.log('processCommand', cmdText);
         var parts = cmdText.split(' ');
@@ -45,9 +49,11 @@ class App extends Component {
             input: "",
         }, () => this.focusInput());
     }
+
     unknownCommand(cmd, args) {
         console.error('InvalidCommand: ', cmd, args);
     }
+
     declareItem(args) {
         if (args.length !== 1) {
             console.error('InvalidArguments: d', args);
@@ -56,6 +62,7 @@ class App extends Component {
         const newItem = makeItem(args[0]);
         this.state.data.addItem(newItem);
     }
+
     relateItems(args) {
         if (args.length !== 2) {
             console.error('InvalidArguments: r', args);
@@ -63,6 +70,7 @@ class App extends Component {
         }
         this.state.data.addRelationship(args[0], args[1]);
     }
+    
     focusInput = () => {
         if (this.textInput) {
             this.textInput.focus();
@@ -70,7 +78,7 @@ class App extends Component {
             console.warn("unable to focusInput");
         }
     }
-    textInput = null
+
     onCommandInput = (ev) => {
         // console.log('onCommandInput', ev.target.value, this);
         this.textInput = ev.target;
@@ -78,6 +86,7 @@ class App extends Component {
             input: ev.target.value
         });
     }
+
     onKeyUp = ev => {
         this.textInput = ev.target;
         if (ev.key === 'Enter') {
@@ -85,6 +94,7 @@ class App extends Component {
         }
         ev.preventDefault();
     }
+
     render({ page }, { data, input, graphSize }) {
         // console.log('App.render', arguments);
         var graphData = Object.assign({}, data);
