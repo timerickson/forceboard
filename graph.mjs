@@ -16,11 +16,12 @@ export class Graph extends Component {
     }
 
     shouldComponentUpdate(newProps = {}, oldProps = {}) {
-        const changed = (oldProps.data.dataStateId != newProps.data.dataStateId);
+        const changed = (oldProps.data.stateId != newProps.data.stateId);
         // console.log('shouldComponentUpdate changed', changed, arguments);
         if (!changed) {
             return false;
         }
+        console.log('shouldComponentUpdate changed', changed, arguments);
 
         this.setState({
             data: newProps.data,
@@ -107,7 +108,7 @@ export class Graph extends Component {
                     .attr("r", 8)
                     .attr("fill", d => color(d.id)));
 
-                if (true) node.append("title").text(({index: i}) => T[i]);
+                // if (true) node.append("title").text(({index: i}) => T[i]);
 
                 link = link
                     .data(links, d => `${d.source.id}\t${d.target.id}`)
