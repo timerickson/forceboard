@@ -31,10 +31,10 @@ class App extends Component {
     }
 
     processCommand(cmdText = this.state.input) {
-        console.log('processCommand', cmdText);
-        var parts = cmdText.split(' ');
-        var cmd = parts[0];
-        var args = parts.slice(1);
+        // console.log('processCommand', cmdText);
+        let parts = cmdText.split(' ');
+        let cmd = parts[0];
+        let args = parts.slice(1);
         switch (cmd) {
             case 'd':
                 this.declareItem(args);
@@ -97,7 +97,7 @@ class App extends Component {
 
     render({ page }, { data, input, graphSize }) {
         // console.log('App.render', arguments);
-        var graphData = Object.assign({}, data);
+        let graphData = Object.assign({}, data);
         return html`
         <div class="app">
             <h1>Diagram</h1>

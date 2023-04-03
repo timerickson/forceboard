@@ -41,17 +41,17 @@ export class Graph extends Component {
     }
 
     initSimulation(state) {
-        var width = state.width;
-        var height = state.height;
-        var invalidation = new Promise((res, rej)=>{});
-        // var nodeTitle = undefined;
+        let width = state.width;
+        let height = state.height;
+        let invalidation = new Promise((res, rej)=>{});
+        // let nodeTitle = undefined;
 
         // const nodeId = (d) => d.id;
         // const N = d3.map(nodes)
         // if (nodeTitle === undefined) nodeTitle = (_, i) => N[i];
         // const T = nodeTitle == null ? null : d3.map(nodes, nodeTitle);
 
-        var color = d3.scaleOrdinal(d3.schemeTableau10);
+        let color = d3.scaleOrdinal(d3.schemeTableau10);
 
         const svg = d3.create("svg")
             .attr("width", width)
@@ -126,10 +126,10 @@ export class Graph extends Component {
 
     updateGraph() {
         console.log('updateGraph', this.state);
-        var node = (i) => ({ id: i.id });
-        var link = (r) => ({ source: r.a.id, target: r.b.id });
-        var nodes = this.state.data.items.map(node);
-        var links = this.state.data.relationships.map(link);
+        let node = (i) => ({ id: i.id });
+        let link = (r) => ({ source: r.a.id, target: r.b.id });
+        let nodes = this.state.data.items.map(node);
+        let links = this.state.data.relationships.map(link);
         this.svg.update({
             "nodes": nodes,
             "links": links

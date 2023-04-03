@@ -1,14 +1,14 @@
-var initalItems= [
+let initalItems= [
     'foo',
     'bar',
     'baz'
 ];
 
-var initialRelationships = [
+let initialRelationships = [
     ['foo', 'bar']
 ]
 
-var initialCommands = [
+let initialCommands = [
     'd foo',
     'd bar',
     'd baz',

@@ -1,4 +1,4 @@
-export var makeItem = function(val) {
+export const makeItem = function(val) {
     return { "id": val.toString(), "item": val };
 }
 
@@ -6,7 +6,7 @@ function itemId(item) {
     if (!item['id']) {
         throw new Error(`item must have an id (prop or fn): ${item}`);
     }
-    var ref = item['id'];
+    let ref = item['id'];
     return (typeof(ref) === 'function') ? ref.apply(item) : ref.toString();
 }
 
