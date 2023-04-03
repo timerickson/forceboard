@@ -127,7 +127,7 @@ export class Graph extends Component {
     updateGraph() {
         console.log('updateGraph', this.state);
         var node = (i) => ({ id: i.id });
-        var link = (r) => ({ source: r.a, target: r.b });
+        var link = (r) => ({ source: r.a.id, target: r.b.id });
         var nodes = this.state.data.items.map(node);
         var links = this.state.data.relationships.map(link);
         this.svg.update({

@@ -28,11 +28,40 @@ class App extends Component {
     }
     processCommand(cmdText = this.state.input) {
         console.log('processCommand', cmdText);
-        this.addItem(makeItem(cmdText));
+        var parts = cmdText.split(' ');
+        var cmd = parts[0];
+        var args = parts.slice(1);
+        switch (cmd) {
+            case 'd':
+                this.declareItem(args);
+                break;
+            case 'r':
+                this.relateItems(args);
+                break;
+            default:
+                this.unknownCommand(cmd, args);
+        }
         this.setState({
             input: "",
-        });
-        this.focusInput();
+        }, () => this.focusInput());
+    }
+    unknownCommand(cmd, args) {
+        console.error('InvalidCommand: ', cmd, args);
+    }
+    declareItem(args) {
+        if (args.length !== 1) {
+            console.error('InvalidArguments: d', args);
+            return;
+        }
+        const newItem = makeItem(args[0]);
+        this.state.data.addItem(newItem);
+    }
+    relateItems(args) {
+        if (args.length !== 2) {
+            console.error('InvalidArguments: r', args);
+            return;
+        }
+        this.state.data.addRelationship(args[0], args[1]);
     }
     focusInput = () => {
         if (this.textInput) {
@@ -41,16 +70,9 @@ class App extends Component {
             console.warn("unable to focusInput");
         }
     }
-    addItem(newItem) {
-        // console.log('addItem', newItem, this.state.input);
-        this.state.data.addItem(newItem);
-    }
-    onClickAdd = () => {
-        this.addItem();
-    }
     textInput = null
-    onInput = (ev) => {
-        // console.log('onInput', ev.target.value, this);
+    onCommandInput = (ev) => {
+        // console.log('onCommandInput', ev.target.value, this);
         this.textInput = ev.target;
         this.setState({
             input: ev.target.value
@@ -70,7 +92,7 @@ class App extends Component {
         <div class="app">
             <h1>Diagram</h1>
             <${Graph} data=${graphData} size=${graphSize}><//>
-            <input type="text" onInput=${this.onInput} onKeyUp=${this.onKeyUp} value=${input} autofocus/>
+            <input type="text" onInput=${this.onCommandInput} onKeyUp=${this.onKeyUp} value=${input} autofocus/>
             <button onClick=${this.processCommand}>Enter</button>
             <ul>
             ${data.items.map(item => html`

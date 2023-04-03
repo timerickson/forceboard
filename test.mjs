@@ -9,9 +9,9 @@ var initialRelationships = [
 ]
 
 var initialCommands = [
-    'a foo',
-    'a bar',
-    'a baz',
+    'd foo',
+    'd bar',
+    'd baz',
     'r foo bar'
 ]
 

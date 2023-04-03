@@ -25,13 +25,14 @@ export class Data {
         this.stateId++;
     }
     addRelationship(idA, idB) {
-        const a = this.itemMap[idA]
         if (idA === idB) {
             throw new Error(`ids must be different (${idA}, ${idB})`);
         }
+        const a = this.itemMap[idA]
         if (!a) {
             throw new Error(`item with idA ${idA} not found`);
         }
+        const b = this.itemMap[idB]
         if (!b) {
             throw new Error(`item with idB ${idB} not found`);
         }
