@@ -21,33 +21,31 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 export class Graph extends Component {
-    constructor(props) {
-        console.log('Graph', arguments)
-        super(props);
+    // https://github.com/preactjs/preact/wiki/External-DOM-Mutations
+    state = {
+        dataStateId: -1
+    }
 
-        this.state = {
-            height: props.size.height,
-            width: props.size.height,
-            data: props.data
-        };
+    constructor(props) {
+        super(props);
+        console.log('Graph', arguments)
 
         this.svg = this.initSimulation();
     }
 
-    shouldComponentUpdate(newProps = {}, oldProps = {}) {
-        const changed = (oldProps.data.stateId != newProps.data.stateId);
-        // console.log('shouldComponentUpdate changed', changed, arguments);
-        if (!changed) {
-            return false;
+    shouldComponentUpdate(newProps = {}, _) {
+        let oldStateId = this.state.dataStateId;
+        let newStateId = newProps.data.stateId;
+        const changed = (oldStateId != newStateId);
+
+        console.log('shouldComponentUpdate changed', changed, newStateId, oldStateId, arguments);
+        if (changed) {
+            this.setState({
+                dataStateId: newStateId
+            }, () => this.updateGraph());
         }
-        console.log('shouldComponentUpdate changed', changed, arguments);
 
-        this.setState({
-            data: newProps.data,
-            height: newProps.size.height,
-            width: newProps.size.width
-        }, () => this.updateGraph());
-
+        // https://github.com/preactjs/preact/wiki/External-DOM-Mutations
         // do not re-render via diff:
         return false;
     }
@@ -56,13 +54,31 @@ export class Graph extends Component {
         // now mounted, can freely modify the DOM:
         // console.log('componentDidMount', arguments);
         this.base.appendChild(this.svg);
+        const svg = this.svg
+        const svgParent = this.base;
+        const updateSvgLayoutAttributes = () => {
+            const { width, height } = svgParent.getBoundingClientRect();
+            // console.log('updateSvgLayoutAttributes', width, height, window.innerWidth, window.innerHeight);
+            // TODO: This should be 2 * (border-width)
+            const buffer = 4;
+            // console.log('Graph.updateSvgLayoutAttributes', width, height, buffer, this.base.getBoundingClientRect());
+            svg.setAttribute('width', `${width-buffer}`);
+            svg.setAttribute('height', `${height-buffer}`);
+            svg.setAttribute('viewBox', `-${width/2 - buffer},-${height/2 - buffer},${width - buffer},${height - buffer}`);
+            // this.updateGraph();
+        }
+        updateSvgLayoutAttributes();
+        window.addEventListener('resize', (e) => {
+            // console.log('resize', e, this.base);
+            updateSvgLayoutAttributes();
+        });
         this.updateGraph();
     }
 
     initSimulation() {
-        let state = this.state;
-        let width = state.width;
-        let height = state.height;
+        let props = this.props;
+        let width = props.size.width;
+        let height = props.size.height;
         let invalidation = new Promise((res, rej)=>{});
         // let nodeTitle = undefined;
 
@@ -74,9 +90,10 @@ export class Graph extends Component {
         let color = d3.scaleOrdinal(d3.schemeTableau10);
 
         const svg = d3.create("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .attr("viewBox", [-width / 2, -height / 2, width, height]);
+            // .attr("style", "height: 100%; width: 100%;")
+            // .attr("height", height)
+            // .attr("viewBox", [-width / 2, -height / 2, width, height])
+            ;
 
         const simulation = d3.forceSimulation()
             .force("charge", d3.forceManyBody().strength(-1000))
@@ -137,26 +154,23 @@ export class Graph extends Component {
     }
 
     render(props, state) {
-        console.log('render', props, state);
+        console.debug('render', props, state);
         return html`
-            <div id="d3target" width=${state.width} height=${state.height}></div>
+            <div id="d3target" style="flex: 1; line-height: 0;"></div>
         `;
     }
 
     updateGraph() {
-        console.log('updateGraph', this.state);
-        let node = (i) => ({ id: i.id });
-        let link = (r) => ({ source: r.a.id, target: r.b.id });
-        let nodes = this.state.data.items.map(node);
-        let links = this.state.data.relationships.map(link);
+        console.debug('Graph.updateGraph'/*, this.props*/);
+        let data = this.props.data;
         this.svg.update({
-            "nodes": nodes,
-            "links": links
+            "nodes": data.items.map((i) => ({ id: i.id })),
+            "links": data.relationships.map((r) => ({ source: r.a.id, target: r.b.id }))
         });
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log('componentDidUpdate', prevProps, prevState, snapshot);
+        console.debug('componentDidUpdate', prevProps, this.props, prevState, snapshot);
         this.updateGraph();
     }
 }

@@ -99,19 +99,23 @@ class App extends Component {
         // console.log('App.render', arguments);
         let graphData = Object.assign({}, data);
         return html`
-        <div class="app">
-            <h1>Diagram</h1>
-            <${Graph} data=${graphData} size=${graphSize}><//>
-            <input type="text" onInput=${this.onCommandInput} onKeyUp=${this.onKeyUp} value=${input} autofocus/>
-            <button onClick=${this.processCommand}>Enter</button>
-            <ul>
-            ${data.items.map(item => html`
-                <li key=${item.id}>${item.id}</li>
-            `)}
-            </ul>
-        </div>
+            <div style="display: flex; flex-direction: column; height: 100vh;">
+                <div style="height: 30px;">
+                    <h1>Diagram</h1>
+                </div>
+                <${Graph} data=${graphData} size=${graphSize}><//>
+                <div style="flex: 1;">
+                    <input type="text" onInput=${this.onCommandInput} onKeyUp=${this.onKeyUp} value=${input} autofocus/>
+                    <button onClick=${this.processCommand}>Enter</button>
+                    <ul>
+                        ${data.items.map(item => html`
+                            <li key=${item.id}>${item.id}</li>
+                        `)}
+                    </ul>
+                </div>
+            </div>
         `;
     }
 }
 
-render(html`<${App} width=640 height=400 />`, document.body);
+render(html`<${App}/>`, document.body.getElementsByTagName('main')[0]);
