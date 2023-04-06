@@ -7,6 +7,7 @@
 - rm button on relationships
 - hover text
 - draggable items
+- hosted example
 - highlight item (on graph) on mouseover (in list)
 - highlight relationship (on graph) on mouseover (in list)
 - highlight item (in list) on mouseover (on graph)
