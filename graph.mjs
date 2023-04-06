@@ -38,7 +38,7 @@ export class Graph extends Component {
         let newStateId = newProps.data.stateId;
         const changed = (oldStateId != newStateId);
 
-        console.log('shouldComponentUpdate changed', changed, newStateId, oldStateId, arguments);
+        // console.log('shouldComponentUpdate changed', changed, newStateId, oldStateId, arguments);
         if (changed) {
             this.setState({
                 dataStateId: newStateId
