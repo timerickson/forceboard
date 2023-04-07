@@ -1,4 +1,5 @@
 import { html, Component, render } from 'preact';
+import { EventSubscribingComponent, UiEvent, GraphEvent } from './events.mjs';
 import * as d3 from "d3";
 
 /*
@@ -20,7 +21,7 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-export class Graph extends Component {
+export class Graph extends EventSubscribingComponent {
     // https://github.com/preactjs/preact/wiki/External-DOM-Mutations
     state = {
         dataStateId: -1
@@ -31,6 +32,7 @@ export class Graph extends Component {
         // console.log('Graph', arguments)
 
         this.svg = this.initSimulation();
+        UiEvent.subscribe((data) => console.log(`Graph received UiEvent ${data}`));
     }
 
     shouldComponentUpdate(newProps = {}, _) {
@@ -144,6 +146,7 @@ export class Graph extends Component {
                         .attr("r", 10)
                         .attr("fill", d => color(d.id))
                         .on('mouseenter', function (d, i) {
+                            GraphEvent.fire(d.id);
                             d3.select(this).transition().duration(100).attr('r', '20');
                         })
                         .on('mouseleave', function (d, i) {
@@ -174,6 +177,7 @@ export class Graph extends Component {
             "nodes": data.items.map((i) => ({ id: i.id })),
             "links": data.relationships.map((r) => ({ source: r.a.id, target: r.b.id }))
         });
+        GraphEvent.fire('updateGraph');
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {

@@ -2,8 +2,9 @@ import { html, Component, render } from 'preact';
 import { Graph } from 'graph';
 import { Data, makeItem } from 'data';
 import { injectTestCommands } from 'test';
+import { EventSubscribingComponent, UiEvent, GraphEvent } from './events.mjs';
 
-class App extends Component {
+class App extends EventSubscribingComponent {
 
     constructor(props) {
         super();
@@ -15,6 +16,7 @@ class App extends Component {
             },
             data: new Data(),
         };
+        GraphEvent.subscribe((data) => console.log(`App received GraphEvent ${data}`));
     }
 
     textInput = null
@@ -83,6 +85,7 @@ class App extends Component {
     onCommandInput = (ev) => {
         // console.log('onCommandInput', ev.target.value, this);
         this.textInput = ev.target;
+        UiEvent.fire(this.textInput.value);
         this.setState({
             input: ev.target.value
         });
