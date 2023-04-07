@@ -141,8 +141,15 @@ export class Graph extends Component {
                 node = node
                     .data(nodes, d => d.id)
                     .join(enter => enter.append("circle")
-                    .attr("r", 8)
-                    .attr("fill", d => color(d.id)));
+                        .attr("r", 10)
+                        .attr("fill", d => color(d.id))
+                        .on('mouseenter', function (d, i) {
+                            d3.select(this).transition().duration(100).attr('r', '20');
+                        })
+                        .on('mouseleave', function (d, i) {
+                            d3.select(this).transition().duration(100).attr('r', '10');
+                        })
+                    );
 
                 // if (true) node.append("title").text(({index: i}) => T[i]);
 

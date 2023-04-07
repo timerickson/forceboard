@@ -1,17 +1,9 @@
-import { html, Component, render, useReducer } from 'preact';
+import { html, Component, render } from 'preact';
 import { Graph } from 'graph';
 import { Data, makeItem } from 'data';
 import { injectTestCommands } from 'test';
 
-// function subscribe() {
-// }
-
-// function getState() {
-//     return { stuff: [] }
-// }
-
 class App extends Component {
-    // stuff = useReducer(subscribe, getState)
 
     constructor(props) {
         super();
@@ -126,7 +118,5 @@ class App extends Component {
         `;
     }
 }
-
-
 
 render(html`<${App}/>`, document.body.getElementsByTagName('main')[0]);
