@@ -1,5 +1,5 @@
-import { html, Component, render } from './standalone.module.js';
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+import { html, Component, render } from 'preact';
+import * as d3 from "d3";
 
 /*
 Large portions of the D3 elements here were taken from
@@ -28,7 +28,7 @@ export class Graph extends Component {
 
     constructor(props) {
         super(props);
-        console.log('Graph', arguments)
+        // console.log('Graph', arguments)
 
         this.svg = this.initSimulation();
     }
@@ -126,7 +126,7 @@ export class Graph extends Component {
 
         return Object.assign(svg.node(), {
             update({nodes, links}) {
-                console.log('svg.update', arguments);
+                // console.log('svg.update', arguments);
 
                 // Make a shallow copy to protect against mutation, while
                 // recycling old nodes to preserve position and velocity.
@@ -154,14 +154,14 @@ export class Graph extends Component {
     }
 
     render(props, state) {
-        console.debug('render', props, state);
+        // console.debug('render', props, state);
         return html`
             <div id="d3target" style="flex: 1; line-height: 0;"></div>
         `;
     }
 
     updateGraph() {
-        console.debug('Graph.updateGraph'/*, this.props*/);
+        // console.debug('Graph.updateGraph'/*, this.props*/);
         let data = this.props.data;
         this.svg.update({
             "nodes": data.items.map((i) => ({ id: i.id })),

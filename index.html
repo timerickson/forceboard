@@ -4,7 +4,19 @@
 
 <head>
   <link rel="stylesheet" href="styles.css" />
-  <script src="standalone.module.js" type="module"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "app": "./app.mjs",
+        "graph": "./graph.mjs",
+        "data": "./data.mjs",
+        "test": "./test.mjs",
+        "d3": "https://cdn.jsdelivr.net/npm/d3@7/+esm",
+        "preact": "./standalone.module.js"
+      }
+    }
+  </script>
+  <!-- <script src="standalone.module.js" type="module"></script> -->
   <script src="app.mjs" type="module"></script>
 </head>
 

@@ -5,6 +5,7 @@
 - custom (variable) forceLink
 - rm button on items
 - rm button on relationships
+- favicon
 - hover text
 - draggable items
 - hosted example
