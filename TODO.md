@@ -1,4 +1,3 @@
-- events
 - list of relationships
 - default item (node) charge/size
 - default relationship (link) force/length/style

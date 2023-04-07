@@ -56,9 +56,17 @@ class Event {
 
 const UiEvent = new Event('UiEvent');
 const GraphEvent = new Event('GraphEvent');
+const GraphItemMouseEnter = new Event('GraphItemMouseEnter');
+const GraphItemMouseLeave = new Event('GraphItemMouseLeave');
+const UiItemMouseEnter = new Event('UiMouseEnter');
+const UiItemMouseLeave = new Event('UiMouseLeave');
 
 export {
     EventSubscribingComponent,
     UiEvent,
-    GraphEvent
+    GraphEvent,
+    GraphItemMouseEnter,
+    GraphItemMouseLeave,
+    UiItemMouseEnter,
+    UiItemMouseLeave
 };
