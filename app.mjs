@@ -110,11 +110,16 @@ class App extends EventSubscribingComponent {
         ev.preventDefault();
     }
 
-    removeLink = (id) => {
+    removeRelationship = (id) => {
         console.debug('removeLink', id);
         this.state.data.removeRelationship(id);
         this.setState({});
-        // LinkDeleted.fire(id);
+    }
+
+    removeItem = (id) => {
+        console.debug('removeItem', id);
+        this.state.data.removeItem(id);
+        this.setState({});
     }
 
     render(_, { data, input }) {
@@ -136,14 +141,14 @@ class App extends EventSubscribingComponent {
                         <div style="flex: 1; overflow: scroll;">
                             <ul>
                                 ${data.items.map(item => html`
-                                    <li key=${item.id}>${item.id}</li>
+                                    <li key=${item.id}>${item.id}<button onClick=${() => this.removeItem(item.id)}>x<//></li>
                                 `)}
                             </ul>
                         </div>
                         <div style="flex: 1; overflow: scroll;">
                             <ul>
                                 ${data.relationships.map(rel => html`
-                                    <li key=${rel.id}>${rel.id}<button onClick=${() => this.removeLink(rel.id)}>rm<//></li>
+                                    <li key=${rel.id}>${rel.id}<button onClick=${() => this.removeRelationship(rel.id)}>x<//></li>
                                 `)}
                             </ul>
                         </div>

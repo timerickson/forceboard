@@ -1,4 +1,3 @@
-- rm button on items
 - hover text
 - draggable items
 - hosted example

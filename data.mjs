@@ -6,8 +6,17 @@ function itemId(item) {
     if (!item['id']) {
         throw new Error(`item must have an id (prop or fn): ${item}`);
     }
-    let ref = item['id'];
+    const ref = item['id'];
     return (typeof(ref) === 'function') ? ref.apply(item) : ref.toString();
+}
+
+function relationshipId(a, b) {
+    if (!(a)) {
+        throw new Error('a is required');
+    } else if (!(b)) {
+        throw new Error('b is required');
+    }
+    return `${itemId(a)}-${itemId(b)}`;
 }
 
 export class Data {
@@ -48,6 +57,27 @@ export class Data {
         this.stateId++;
     }
 
+    removeItem(id) {
+        if (!id) {
+            throw new Error('id is required');
+        }
+        if (!(id in this.itemMap)) {
+            throw new Error(`item ${id} not found`);
+        }
+        const item = this.itemMap[id];
+        const idx = this.items.findIndex(i => i.id === id);
+        if (idx === -1) {
+            throw new Error(`item ${id} not found in items`);
+        }
+        if (!(id in this.itemRelationships)) {
+            throw new Error(`relatiionships not found for item ${id}`);
+        }
+        this.itemRelationships[id].forEach(relationship => {
+            this.removeRelationship(relationship.id);
+        });
+        this.stateId++;
+    }
+
     removeItemRelationship(itemId, relationshipId) {
         if (!(itemId in this.itemRelationships)) {
             console.error('relMap', this.itemRelationships);
@@ -60,6 +90,7 @@ export class Data {
             throw new Error(`removeItemRelationship : relationship ${relationshipId} not found in item ${itemId} relationships`);
         }
         relationships.splice(idx, 1);
+        this.stateId++;
     }
 
     removeRelationship(id) {
