@@ -1,14 +1,13 @@
-import { html, Component, render } from 'preact';
+import { html, render } from 'preact';
 import { Graph } from 'graph';
 import { Data, makeItem } from 'data';
 import { injectTestCommands } from 'test';
-import { EventSubscribingComponent, UiEvent, GraphEvent } from './events.mjs';
+import { EventSubscribingComponent, UiEvent, GraphItemMouseEnter, GraphItemMouseLeave } from './events.mjs';
 
 class App extends EventSubscribingComponent {
 
     constructor(props) {
-        super();
-        // console.log('App', props)
+        super(props);
         this.state = {
             graphSize: {
                 height: props['width'] || 400,
@@ -16,7 +15,16 @@ class App extends EventSubscribingComponent {
             },
             data: new Data(),
         };
-        GraphEvent.subscribe((data) => console.log(`App received GraphEvent ${data}`));
+        GraphItemMouseEnter.subscribe(this.onGraphItemMouseEnter);
+        GraphItemMouseLeave.subscribe(this.onGraphItemMouseLeave);
+    }
+
+    onGraphItemMouseEnter(id) {
+        console.log('App.onGraphItemMouseEnter', id);
+    }
+
+    onGraphItemMouseLeave(id) {
+        console.log('App.onGraphItemMouseLeave', id);
     }
 
     textInput = null
@@ -99,7 +107,7 @@ class App extends EventSubscribingComponent {
         ev.preventDefault();
     }
 
-    render({ page }, { data, input, graphSize }) {
+    render(_, { data, input, graphSize }) {
         // console.log('App.render', arguments);
         let graphData = Object.assign({}, data);
         return html`

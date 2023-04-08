@@ -1,5 +1,11 @@
-import { html, Component, render } from 'preact';
-import { EventSubscribingComponent, UiEvent, GraphEvent } from './events.mjs';
+import { html } from 'preact';
+import {
+    EventSubscribingComponent,
+    UiEvent,
+    GraphEvent,
+    GraphItemMouseEnter,
+    GraphItemMouseLeave
+} from './events.mjs';
 import * as d3 from "d3";
 
 /*
@@ -23,13 +29,10 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 export class Graph extends EventSubscribingComponent {
     // https://github.com/preactjs/preact/wiki/External-DOM-Mutations
-    state = {
-        dataStateId: -1
-    }
 
     constructor(props) {
         super(props);
-        // console.log('Graph', arguments)
+        // console.debug('Graph', arguments)
 
         this.svg = this.initSimulation();
         UiEvent.subscribe((data) => console.log(`Graph received UiEvent ${data}`));
@@ -40,7 +43,7 @@ export class Graph extends EventSubscribingComponent {
         let newStateId = newProps.data.stateId;
         const changed = (oldStateId != newStateId);
 
-        // console.log('shouldComponentUpdate changed', changed, newStateId, oldStateId, arguments);
+        // console.debug('shouldComponentUpdate changed', changed, newStateId, oldStateId, arguments);
         if (changed) {
             this.setState({
                 dataStateId: newStateId
@@ -56,9 +59,8 @@ export class Graph extends EventSubscribingComponent {
         // now mounted, can freely modify the DOM:
         // console.log('componentDidMount', arguments);
         this.base.appendChild(this.svg);
+
         const svg = this.svg
-        const svgParent = this.base;
-        // const updateSvgLayoutAttributes = () => {
         const updateSvgLayoutAttributes = ({ width, height }) => {
             // TODO: This should be 2 * (border-width)
             const buffer = 4;
@@ -89,13 +91,11 @@ export class Graph extends EventSubscribingComponent {
             }
         });
         resizeObserver.observe(this.base);
+
         this.updateGraph();
     }
 
     initSimulation() {
-        let props = this.props;
-        let width = props.size.width;
-        let height = props.size.height;
         let invalidation = new Promise((res, rej)=>{});
         // let nodeTitle = undefined;
 
@@ -106,11 +106,7 @@ export class Graph extends EventSubscribingComponent {
 
         let color = d3.scaleOrdinal(d3.schemeTableau10);
 
-        const svg = d3.create("svg")
-            // .attr("style", "height: 100%; width: 100%;")
-            // .attr("height", height)
-            // .attr("viewBox", [-width / 2, -height / 2, width, height])
-            ;
+        const svg = d3.create("svg");
 
         const simulation = d3.forceSimulation()
             .force("charge", d3.forceManyBody().strength(-1000))
@@ -160,11 +156,12 @@ export class Graph extends EventSubscribingComponent {
                     .join(enter => enter.append("circle")
                         .attr("r", 10)
                         .attr("fill", d => color(d.id))
-                        .on('mouseenter', function (d, i) {
-                            GraphEvent.fire(d.id);
+                        .on('mouseenter', function (e, item) {
+                            GraphItemMouseEnter.fire(item.id);
                             d3.select(this).transition().duration(100).attr('r', '20');
                         })
-                        .on('mouseleave', function (d, i) {
+                        .on('mouseleave', function (e, item) {
+                            GraphItemMouseLeave.fire(item.id);
                             d3.select(this).transition().duration(100).attr('r', '10');
                         })
                     );
@@ -178,8 +175,7 @@ export class Graph extends EventSubscribingComponent {
         });
     }
 
-    render(props, state) {
-        // console.debug('render', props, state);
+    render() {
         return html`
             <div id="d3target" style="flex: 1; line-height: 0;"></div>
         `;
@@ -187,10 +183,10 @@ export class Graph extends EventSubscribingComponent {
 
     updateGraph() {
         // console.debug('Graph.updateGraph'/*, this.props*/);
-        let data = this.props.data;
+        const { items, relationships } = this.props.data;
         this.svg.update({
-            "nodes": data.items.map((i) => ({ id: i.id })),
-            "links": data.relationships.map((r) => ({ source: r.a.id, target: r.b.id }))
+            "nodes": items.map((i) => ({ id: i.id })),
+            "links": relationships.map((r) => ({ source: r.a.id, target: r.b.id }))
         });
         GraphEvent.fire('updateGraph');
     }
