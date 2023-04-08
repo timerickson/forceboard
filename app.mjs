@@ -4,8 +4,6 @@ import { Data, makeItem } from 'data';
 import { injectTestCommands } from 'test';
 import {
     EventSubscribingComponent,
-    UiEvent,
-    LinkDeleted,
     ItemSelected,
     ItemDeselected,
     RelationshipSelected,
@@ -108,7 +106,6 @@ class App extends EventSubscribingComponent {
     onCommandInput = (ev) => {
         // console.log('onCommandInput', ev.target.value, this);
         this.textInput = ev.target;
-        UiEvent.fire(this.textInput.value);
         this.setState({
             input: ev.target.value
         });

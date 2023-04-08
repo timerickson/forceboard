@@ -1,10 +1,6 @@
 import { html } from 'preact';
 import {
     EventSubscribingComponent,
-    UiEvent,
-    GraphEvent,
-    GraphItemMouseEnter,
-    GraphItemMouseLeave,
     ItemSelected,
     ItemDeselected
 } from './events.mjs';
@@ -35,8 +31,6 @@ export class Graph extends EventSubscribingComponent {
     constructor(props) {
         super(props);
         // console.debug('Graph', arguments)
-
-        UiEvent.subscribe((data) => console.log(`Graph received UiEvent ${data}`));
     }
 
     shouldComponentUpdate(newProps = {}, _) {
@@ -190,13 +184,12 @@ export class Graph extends EventSubscribingComponent {
     }
 
     updateGraph() {
-        // console.debug('Graph.updateGraph'/*, this.props*/);
+        console.debug('Graph.updateGraph');
         const { items, relationships } = this.props.data;
         this.svg.update({
             "nodes": items.map((i) => ({ id: i.id })),
             "links": relationships.map((r) => ({ source: r.a.id, target: r.b.id }))
         });
-        GraphEvent.fire('updateGraph');
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {

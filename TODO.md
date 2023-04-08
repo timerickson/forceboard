@@ -1,3 +1,4 @@
+- pan/zoom
 - hover text
 - draggable items
 - highlight relationship (on graph) on mouseover (in list)
@@ -7,7 +8,6 @@
 - default relationship
 - t (tag) item
 - t (tag) relationship
-- pan/zoom
 - directional relationships (arrows)
 - virtual relationships (no force) can be done with custom rel mods (forceFactor 0)
 - props view of items (treeview)
@@ -19,6 +19,9 @@
 - node image library
 - hosted example
 - favicon
+
+BUGS:
+- can add duplicate relationship id
 
 TECH_DEBT:
 - refactor app to more components

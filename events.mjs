@@ -54,29 +54,15 @@ class Event {
     }
 }
 
-const UiEvent = new Event('UiEvent');
-const GraphEvent = new Event('GraphEvent');
-const GraphItemMouseEnter = new Event('GraphItemMouseEnter');
-const GraphItemMouseLeave = new Event('GraphItemMouseLeave');
-const UiItemMouseEnter = new Event('UiMouseEnter');
-const UiItemMouseLeave = new Event('UiMouseLeave');
 const ItemSelected = new Event('ItemSelected');
 const ItemDeselected = new Event('ItemDeselected');
 const RelationshipSelected = new Event('RelationshipSelected');
 const RelationshipDeselected = new Event('RelationshipDeselected');
-const LinkDeleted = new Event('LinkDeleted');
 
 export {
     EventSubscribingComponent,
-    UiEvent,
-    GraphEvent,
-    GraphItemMouseEnter,
-    GraphItemMouseLeave,
-    UiItemMouseEnter,
-    UiItemMouseLeave,
     ItemSelected,
     ItemDeselected,
     RelationshipSelected,
-    RelationshipDeselected,
-    LinkDeleted
+    RelationshipDeselected
 };
