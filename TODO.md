@@ -1,10 +1,4 @@
-- default item (node) charge/size
-- default relationship (link) force/length/style
-- custom (stronger) forceX/Y
-- custom (variable) forceLink
 - rm button on items
-- rm button on relationships
-- favicon
 - hover text
 - draggable items
 - hosted example
@@ -28,5 +22,14 @@
 - custom node shape
 - custom node image
 - node image library
+
+NICE_TO_HAVE:
+- favicon
+- default item (node) charge/size
+- default relationship (link) force/length/style
+- custom (stronger) forceX/Y
+- custom (variable) forceLink
+
+FUTURE
 - NRT (data feed a la dynamic monitoring of traffic)
 - how to render many (thousands, millions?) of items/rels -- aggregation?
