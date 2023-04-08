@@ -75,6 +75,8 @@ export class Data {
         this.itemRelationships[id].forEach(relationship => {
             this.removeRelationship(relationship.id);
         });
+        this.items.splice(idx, 1);
+        delete this.itemMap[id];
         this.stateId++;
     }
 
@@ -105,6 +107,7 @@ export class Data {
             throw new Error(`removeRelationship : relationship ${id} not found`);
         }
         this.relationships.splice(idx, 1);
+        delete this.relationshipMap[id];
         this.stateId++;
     }
 }

@@ -5,9 +5,11 @@ import { injectTestCommands } from 'test';
 import {
     EventSubscribingComponent,
     UiEvent,
-    GraphItemMouseEnter,
-    GraphItemMouseLeave,
-    LinkDeleted
+    LinkDeleted,
+    ItemSelected,
+    ItemDeselected,
+    RelationshipSelected,
+    RelationshipDeselected
 } from './events.mjs';
 
 class App extends EventSubscribingComponent {
@@ -18,16 +20,26 @@ class App extends EventSubscribingComponent {
     constructor(props) {
         super(props);
 
-        GraphItemMouseEnter.subscribe(this.onGraphItemMouseEnter);
-        GraphItemMouseLeave.subscribe(this.onGraphItemMouseLeave);
+        ItemSelected.subscribe(this.onItemSelected);
+        ItemDeselected.subscribe(this.onItemDeselected);
+        RelationshipSelected.subscribe(this.onRelationshipSelected);
+        RelationshipDeselected.subscribe(this.onRelationshipDeselected);
     }
 
-    onGraphItemMouseEnter(id) {
-        console.log('App.onGraphItemMouseEnter', id);
+    onItemSelected(id) {
+        console.debug('App.onItemSelected', id);
     }
 
-    onGraphItemMouseLeave(id) {
-        console.log('App.onGraphItemMouseLeave', id);
+    onItemDeselected(id) {
+        console.debug('App.onItemDeselected', id);
+    }
+
+    onRelationshipSelected(id) {
+        console.debug('App.onRelationshipSelected', id);
+    }
+
+    onRelationshipDeselected(id) {
+        console.debug('App.onRelationshipDeselected', id);
     }
 
     textInput = null
@@ -111,7 +123,7 @@ class App extends EventSubscribingComponent {
     }
 
     removeRelationship = (id) => {
-        console.debug('removeLink', id);
+        console.debug('removeRelationship', id);
         this.state.data.removeRelationship(id);
         this.setState({});
     }
@@ -141,14 +153,18 @@ class App extends EventSubscribingComponent {
                         <div style="flex: 1; overflow: scroll;">
                             <ul>
                                 ${data.items.map(item => html`
-                                    <li key=${item.id}>${item.id}<button onClick=${() => this.removeItem(item.id)}>x<//></li>
+                                    <li
+                                        onmouseenter=${() => ItemSelected.fire(item.id)} onmouseleave=${() => ItemDeselected.fire(item.id)}
+                                        key=${item.id}>${item.id}<button onClick=${() => this.removeItem(item.id)}>x<//></li>
                                 `)}
                             </ul>
                         </div>
                         <div style="flex: 1; overflow: scroll;">
                             <ul>
                                 ${data.relationships.map(rel => html`
-                                    <li key=${rel.id}>${rel.id}<button onClick=${() => this.removeRelationship(rel.id)}>x<//></li>
+                                    <li
+                                        onmouseenter=${() => RelationshipSelected.fire(rel.id)} onmouseleave=${() => RelationshipDeselected.fire(rel.id)}
+                                        key=${rel.id}>${rel.id}<button onClick=${() => this.removeRelationship(rel.id)}>x<//></li>
                                 `)}
                             </ul>
                         </div>
