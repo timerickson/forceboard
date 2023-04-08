@@ -34,7 +34,6 @@ export class Graph extends EventSubscribingComponent {
         super(props);
         // console.debug('Graph', arguments)
 
-        this.svg = this.initSimulation();
         UiEvent.subscribe((data) => console.log(`Graph received UiEvent ${data}`));
     }
 
@@ -57,14 +56,15 @@ export class Graph extends EventSubscribingComponent {
 
     componentDidMount() {
         // now mounted, can freely modify the DOM:
-        // console.log('componentDidMount', arguments);
+        // console.debug('componentDidMount', arguments);
+        this.svg = this.initSimulation();
         this.base.appendChild(this.svg);
 
         const svg = this.svg
         const updateSvgLayoutAttributes = ({ width, height }) => {
             // TODO: This should be 2 * (border-width)
             const buffer = 4;
-            // console.log('Graph.updateSvgLayoutAttributes', width, height, buffer, this.base.getBoundingClientRect());
+            // console.debug('Graph.updateSvgLayoutAttributes', width, height, buffer, this.base.getBoundingClientRect());
             svg.setAttribute('width', `${width-buffer}`);
             svg.setAttribute('height', `${height-buffer}`);
             svg.setAttribute('viewBox', `-${width/2 - buffer},-${height/2 - buffer},${width - buffer},${height - buffer}`);

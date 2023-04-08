@@ -1,4 +1,3 @@
-- list of relationships
 - default item (node) charge/size
 - default relationship (link) force/length/style
 - custom (stronger) forceX/Y
@@ -20,6 +19,7 @@
 - props view of items (treeview)
 - s (search) item/relationship/tag
 - make buffer value dynamic in Graph.componentDidMount.updateSvgLayoutAttributes
+- Update Graph layout via https://preactjs.com/guide/v10/hooks#uselayouteffect
 - peg preact/htm version (standalone)
 - import data
 - export data

@@ -5,16 +5,13 @@ import { injectTestCommands } from 'test';
 import { EventSubscribingComponent, UiEvent, GraphItemMouseEnter, GraphItemMouseLeave } from './events.mjs';
 
 class App extends EventSubscribingComponent {
+    state = {
+        data: new Data()
+    }
 
     constructor(props) {
         super(props);
-        this.state = {
-            graphSize: {
-                height: props['width'] || 400,
-                width: props['height'] || 400
-            },
-            data: new Data(),
-        };
+
         GraphItemMouseEnter.subscribe(this.onGraphItemMouseEnter);
         GraphItemMouseLeave.subscribe(this.onGraphItemMouseLeave);
     }
@@ -42,7 +39,7 @@ class App extends EventSubscribingComponent {
     }
 
     processCommand(cmdText = this.state.input) {
-        // console.log('processCommand', cmdText);
+        // console.debug('processCommand', cmdText);
         let parts = cmdText.split(' ');
         let cmd = parts[0];
         let args = parts.slice(1);
@@ -107,23 +104,37 @@ class App extends EventSubscribingComponent {
         ev.preventDefault();
     }
 
-    render(_, { data, input, graphSize }) {
+    render(_, { data, input }) {
         // console.log('App.render', arguments);
         let graphData = Object.assign({}, data);
         return html`
-            <div style="display: flex; flex-direction: column; flex: 1;">
+            <div style="display: flex; flex-direction: column; flex: 1; overflow: auto;">
                 <div style="height: 30px;">
                     <h1>Diagram</h1>
                 </div>
-                <${Graph} data=${graphData} size=${graphSize}><//>
-                <div style="flex: 1;">
-                    <input type="text" onInput=${this.onCommandInput} onKeyUp=${this.onKeyUp} value=${input} autofocus/>
-                    <button onClick=${this.processCommand}>Enter</button>
-                    <ul>
-                        ${data.items.map(item => html`
-                            <li key=${item.id}>${item.id}</li>
-                        `)}
-                    </ul>
+                <${Graph} data=${graphData} style="flex: 1;"><//>
+                <div style="max-height: 20vh; display: flex; flex-direction: column; overflow: auto;">
+                    <div>
+                        <input type="text" onInput=${this.onCommandInput} onKeyUp=${this.onKeyUp} value=${input} autofocus/>
+                        <button onClick=${this.processCommand}>Enter</button>
+                    </div>
+                    <div style="flex: 1; display: flex; overflow: auto;">
+                        <!-- https://stackoverflow.com/questions/21515042/scrolling-a-flexbox-with-overflowing-content -->
+                        <div style="flex: 1; overflow: scroll;">
+                            <ul>
+                                ${data.items.map(item => html`
+                                    <li key=${item.id}>${item.id}</li>
+                                `)}
+                            </ul>
+                        </div>
+                        <div style="flex: 1; overflow: scroll;">
+                            <ul>
+                                ${data.relationships.map(rel => html`
+                                    <li key=${rel.id}>${rel.id}</li>
+                                `)}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;

@@ -38,7 +38,7 @@ export class Data {
         if (!b) {
             throw new Error(`item with idB ${idB} not found`);
         }
-        const relationship = { "a": a, "b": b };
+        const relationship = { "a": a, "b": b, "id": `${a.id}-${b.id}` };
         this.itemRelationships[idA].push(relationship);
         this.itemRelationships[idB].push(relationship);
         this.relationships.push(relationship);
