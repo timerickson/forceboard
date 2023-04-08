@@ -60,6 +60,7 @@ const GraphItemMouseEnter = new Event('GraphItemMouseEnter');
 const GraphItemMouseLeave = new Event('GraphItemMouseLeave');
 const UiItemMouseEnter = new Event('UiMouseEnter');
 const UiItemMouseLeave = new Event('UiMouseLeave');
+const LinkDeleted = new Event('LinkDeleted');
 
 export {
     EventSubscribingComponent,
@@ -68,5 +69,6 @@ export {
     GraphItemMouseEnter,
     GraphItemMouseLeave,
     UiItemMouseEnter,
-    UiItemMouseLeave
+    UiItemMouseLeave,
+    LinkDeleted
 };

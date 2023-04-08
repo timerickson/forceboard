@@ -2,7 +2,13 @@ import { html, render } from 'preact';
 import { Graph } from 'graph';
 import { Data, makeItem } from 'data';
 import { injectTestCommands } from 'test';
-import { EventSubscribingComponent, UiEvent, GraphItemMouseEnter, GraphItemMouseLeave } from './events.mjs';
+import {
+    EventSubscribingComponent,
+    UiEvent,
+    GraphItemMouseEnter,
+    GraphItemMouseLeave,
+    LinkDeleted
+} from './events.mjs';
 
 class App extends EventSubscribingComponent {
     state = {
@@ -104,6 +110,13 @@ class App extends EventSubscribingComponent {
         ev.preventDefault();
     }
 
+    removeLink = (id) => {
+        console.debug('removeLink', id);
+        this.state.data.removeRelationship(id);
+        this.setState({});
+        // LinkDeleted.fire(id);
+    }
+
     render(_, { data, input }) {
         // console.log('App.render', arguments);
         let graphData = Object.assign({}, data);
@@ -130,7 +143,7 @@ class App extends EventSubscribingComponent {
                         <div style="flex: 1; overflow: scroll;">
                             <ul>
                                 ${data.relationships.map(rel => html`
-                                    <li key=${rel.id}>${rel.id}</li>
+                                    <li key=${rel.id}>${rel.id}<button onClick=${() => this.removeLink(rel.id)}>rm<//></li>
                                 `)}
                             </ul>
                         </div>
