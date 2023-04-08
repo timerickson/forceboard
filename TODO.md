@@ -1,4 +1,3 @@
-- draggable items
 - hover text
 - pan/zoom
 - selected pane (item, relationship)
