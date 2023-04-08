@@ -58,22 +58,37 @@ export class Graph extends EventSubscribingComponent {
         this.base.appendChild(this.svg);
         const svg = this.svg
         const svgParent = this.base;
-        const updateSvgLayoutAttributes = () => {
-            const { width, height } = svgParent.getBoundingClientRect();
-            // console.log('updateSvgLayoutAttributes', width, height, window.innerWidth, window.innerHeight);
+        // const updateSvgLayoutAttributes = () => {
+        const updateSvgLayoutAttributes = ({ width, height }) => {
             // TODO: This should be 2 * (border-width)
             const buffer = 4;
             // console.log('Graph.updateSvgLayoutAttributes', width, height, buffer, this.base.getBoundingClientRect());
             svg.setAttribute('width', `${width-buffer}`);
             svg.setAttribute('height', `${height-buffer}`);
             svg.setAttribute('viewBox', `-${width/2 - buffer},-${height/2 - buffer},${width - buffer},${height - buffer}`);
-            // this.updateGraph();
+            this.updateGraph();
         }
-        updateSvgLayoutAttributes();
-        window.addEventListener('resize', (e) => {
-            // console.log('resize', e, this.base);
-            updateSvgLayoutAttributes();
+        const resizeObserver = new ResizeObserver((entries) => {
+            let resizes = 0;
+            for (const entry of entries) {
+                if (entry.borderBoxSize?.length > 0) {
+                    if (++resizes > 1) {
+                        console.warn('ResizeObserver multiple calls');
+                    }
+                    updateSvgLayoutAttributes({
+                      width: entry.borderBoxSize[0].inlineSize,
+                      height: entry.borderBoxSize[0].blockSize
+                    });
+                  } else {
+                    console.warn('ResizeObserver fallback');
+                    updateSvgLayoutAttributes({
+                      width: entry.contentRect.width,
+                      height: entry.contentRect.height
+                    });
+                  }
+            }
         });
+        resizeObserver.observe(this.base);
         this.updateGraph();
     }
 

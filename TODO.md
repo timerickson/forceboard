@@ -19,6 +19,7 @@
 - virtual relationships (no force) can be done with custom rel mods (forceFactor 0)
 - props view of items (treeview)
 - s (search) item/relationship/tag
+- make buffer value dynamic in Graph.componentDidMount.updateSvgLayoutAttributes
 - peg preact/htm version (standalone)
 - import data
 - export data
