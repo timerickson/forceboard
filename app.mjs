@@ -103,7 +103,7 @@ class App extends EventSubscribingComponent {
         // console.log('App.render', arguments);
         let graphData = Object.assign({}, data);
         return html`
-            <div style="display: flex; flex-direction: column; height: 100vh;">
+            <div style="display: flex; flex-direction: column; flex: 1;">
                 <div style="height: 30px;">
                     <h1>Diagram</h1>
                 </div>
