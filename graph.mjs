@@ -65,7 +65,6 @@ export class Graph extends EventSubscribingComponent {
             yMax = Math.max(yMax, d.y);
         });
         const halfBuffer = this.buffer / 2.0;
-        // console.debug('buffer', this.buffer, halfBuffer, xMin, xMax, yMin, yMax);
         this.contentExtent = {
             xMin: xMin - halfBuffer,
             xMax: xMax + halfBuffer,
@@ -73,14 +72,15 @@ export class Graph extends EventSubscribingComponent {
             yMax: yMax + halfBuffer
         };
         // console.debug('set contentExtent', this.contentExtent);
-        this.updateSvgLayoutAttributes({ width: this.base.clientWidth, height: this.base.clientHeight });
+        this.updateSvgLayoutAttributes();
     }
 
-    buffer = 4;
+    // TODO: This should be 2 * (border-width)
+    buffer = 6;
 
-    getScale(svgRect) {
-        const widthPx = svgRect.width;
-        const heightPx = svgRect.height;
+    getScale(avlSize) {
+        const widthPx = avlSize.width;
+        const heightPx = avlSize.height;
         const widthUnits = this.contentExtent.xMax - this.contentExtent.xMin;
         const heightUnits = this.contentExtent.yMax - this.contentExtent.yMin;
         const widthScale = (widthPx * 1.0) / widthUnits;
@@ -89,16 +89,18 @@ export class Graph extends EventSubscribingComponent {
         return Math.min(widthScale, heightScale);
     }
 
-    updateSvgLayoutAttributes(size) {
-        const { width, height } = size;
-        const scale = this.getScale(size);
-        console.debug('scale', scale, this.contentExtent, size);
-        // TODO: This should be 2 * (border-width)
-        // console.debug('Graph.updateSvgLayoutAttributes', width, height, buffer, this.base.getBoundingClientRect());
-        this.svg.setAttribute('width', `${width - this.buffer}`);
-        this.svg.setAttribute('height', `${height - this.buffer}`);
-        this.svg.setAttribute('viewBox', `-${((width/2) / scale) - this.buffer},-${((height/2) / scale) - this.buffer},${(width / scale) - this.buffer},${(height / scale) - this.buffer}`);
-        // this.updateGraph();
+    updateSvgLayoutAttributes() {
+        const width = this.base.clientWidth - this.buffer;
+        const height = this.base.clientHeight - this.buffer;
+        const size = { width, height };
+        let scale = this.getScale(size);
+        scale = Math.min(scale, 1.0);
+        const scaledWidth = Math.ceil(width / scale);
+        const scaledHeight = Math.ceil(height / scale);
+        // console.debug('scale', scale, this.contentExtent, { width: scaledWidth, height: scaledHeight });
+        this.svg.setAttribute('width', `${width}`);
+        this.svg.setAttribute('height', `${height}`);
+        this.svg.setAttribute('viewBox', `-${scaledWidth/2},-${scaledHeight/2},${scaledWidth},${scaledHeight}`);
     }
 
     componentDidMount() {
@@ -115,10 +117,11 @@ export class Graph extends EventSubscribingComponent {
                     if (++resizes > 1) {
                         console.warn('ResizeObserver multiple calls');
                     }
-                    this.updateSvgLayoutAttributes({
-                      width: entry.borderBoxSize[0].inlineSize,
-                      height: entry.borderBoxSize[0].blockSize
-                    });
+                    this.updateSvgLayoutAttributes();
+                    // this.updateSvgLayoutAttributes({
+                    //   width: entry.borderBoxSize[0].inlineSize,
+                    //   height: entry.borderBoxSize[0].blockSize
+                    // });
                   } else {
                     console.warn('ResizeObserver fallback');
                     this.updateSvgLayoutAttributes({
@@ -239,8 +242,6 @@ export class Graph extends EventSubscribingComponent {
                         })
                         .call(drag(simulation))
                     );
-
-                // instance.collectContentExtent(node);
 
                 // if (true) node.append("title").text(({index: i}) => T[i]);
 

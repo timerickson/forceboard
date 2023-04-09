@@ -1,4 +1,3 @@
-- pan/zoom
 - selected pane (item, relationship)
 - highlight relationship (on graph) on mouseover (in list)
 - highlight item (in list) on mouseover (on graph)
@@ -37,6 +36,7 @@ NICE_TO_HAVE:
 - default relationship (link) force/length/style
 - custom (stronger) forceX/Y
 - custom (variable) forceLink
+- pan/zoom
 
 FUTURE
 - NRT (data feed a la dynamic monitoring of traffic)
