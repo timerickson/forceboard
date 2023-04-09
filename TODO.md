@@ -1,4 +1,3 @@
-- hover text
 - pan/zoom
 - selected pane (item, relationship)
 - highlight relationship (on graph) on mouseover (in list)
@@ -6,6 +5,7 @@
 - highlight relationship (in list) on mouseover (on graph)
 - default item (size, charge, color)
 - default relationship (length, color)
+- graph node labels
 - s (search) item/relationship/tag
 - t (tag) item
 - t (tag) relationship
