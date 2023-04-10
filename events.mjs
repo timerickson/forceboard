@@ -8,7 +8,7 @@ class EventSubscribingComponent extends Component {
             subscriptions.push(ev.subscribe(callback));
         }
         this.unsubscribeAll = () => {
-            this.subscriptions.forEach(sub => sub.cancel());
+            subscriptions.forEach(sub => sub.cancel());
         }
     }
 
@@ -45,7 +45,7 @@ class Event {
         }
 
         this.unsubscribe = (callback) => {
-            console.log(`Event ${name} unsubscribe ${callback}`);
+            console.debug(`Event ${name} unsubscribe ${callback}`);
             const idx = callbacks.indexOf(callback);
             if (idx !== -1) {
                 callbacks.splice(idx, 1);
@@ -58,11 +58,13 @@ const ItemSelected = new Event('ItemSelected');
 const ItemDeselected = new Event('ItemDeselected');
 const RelationshipSelected = new Event('RelationshipSelected');
 const RelationshipDeselected = new Event('RelationshipDeselected');
+const DataChanged = new Event('DataChanged');
 
 export {
     EventSubscribingComponent,
     ItemSelected,
     ItemDeselected,
     RelationshipSelected,
-    RelationshipDeselected
+    RelationshipDeselected,
+    DataChanged
 };

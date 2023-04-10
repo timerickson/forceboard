@@ -1,14 +1,12 @@
-- selected pane (item, relationship)
-- highlight relationship (on graph) on mouseover (in list)
 - highlight item (in list) on mouseover (on graph)
 - highlight relationship (in list) on mouseover (on graph)
+- highlight relationship (on graph) on mouseover (in list)
 - default item (size, charge, color)
 - default relationship (length, color)
 - graph node labels
 - s (search) item/relationship/tag
 - t (tag) item
 - t (tag) relationship
-- re-center (or change center)
 - directional relationships (arrows)
 - virtual relationships (no force) can be done with custom rel mods (forceFactor 0)
 - props view of items (treeview)
@@ -20,7 +18,6 @@ BUGS:
 
 TECH_DEBT:
 - peg preact/htm version (standalone)
-- refactor app to more components
 - make buffer value dynamic in Graph.componentDidMount.updateSvgLayoutAttributes
 - Update Graph layout via https://preactjs.com/guide/v10/hooks#uselayouteffect
 - move inline styles to stylesheet

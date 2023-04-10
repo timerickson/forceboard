@@ -20,12 +20,37 @@ function relationshipId(a, b) {
 }
 
 export class Data {
+    constructor(changeCallback) {
+        const changed = changeCallback || (() => console.log('Data changed'));
+        this.onChanged = changed;
+    }
+
     items = []
     itemMap = {}
     itemRelationships = {}
     relationships = []
     relationshipMap = {}
     stateId = 0
+
+    getItem(id) {
+        if (!id) {
+            throw new Error('id is required');
+        }
+        if (!(id in this.itemMap)) {
+            throw new Error(`item ${id} not found`);
+        }
+        return this.itemMap[id];
+    }
+
+    getRelationship(id) {
+        if (!id) {
+            throw new Error('id is required');
+        }
+        if (!(id in this.relationshipMap)) {
+            throw new Error(`relationship ${id} not found`);
+        }
+        return this.relationshipMap[id];
+    }
 
     addItem(item) {
         const id = itemId(item);
@@ -34,6 +59,7 @@ export class Data {
         this.itemMap[id] = item;
         this.itemRelationships[id] = [];
         this.stateId++;
+        this.onChanged();
     }
 
     addRelationship(idA, idB) {
@@ -48,13 +74,14 @@ export class Data {
         if (!b) {
             throw new Error(`item with idB ${idB} not found`);
         }
-        const id = `${idA}-${idB}`;
+        const id = relationshipId(a, b);;
         const relationship = { "a": a, "b": b, "id": `${id}` };
         this.itemRelationships[idA].push(relationship);
         this.itemRelationships[idB].push(relationship);
         this.relationships.push(relationship);
         this.relationshipMap[id] = relationship;
         this.stateId++;
+        this.onChanged();
     }
 
     removeItem(id) {
@@ -78,6 +105,7 @@ export class Data {
         this.items.splice(idx, 1);
         delete this.itemMap[id];
         this.stateId++;
+        this.onChanged();
     }
 
     removeItemRelationship(itemId, relationshipId) {
@@ -109,5 +137,6 @@ export class Data {
         this.relationships.splice(idx, 1);
         delete this.relationshipMap[id];
         this.stateId++;
+        this.onChanged();
     }
 }

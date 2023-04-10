@@ -2,7 +2,8 @@ import { html } from 'preact';
 import {
     EventSubscribingComponent,
     ItemSelected,
-    ItemDeselected
+    ItemDeselected,
+    DataChanged
 } from './events.mjs';
 import * as d3 from "d3";
 
@@ -31,6 +32,8 @@ export class Graph extends EventSubscribingComponent {
     constructor(props) {
         super(props);
         // console.debug('Graph', arguments)
+    
+        DataChanged.subscribe(() => this.updateGraph());
     }
 
     shouldComponentUpdate(newProps = {}, _) {
@@ -259,7 +262,7 @@ export class Graph extends EventSubscribingComponent {
     }
 
     updateGraph() {
-        console.debug('Graph.updateGraph');
+        // console.debug('Graph.updateGraph');
         const { items, relationships } = this.props.data;
         this.svg.update({
             "nodes": items.map((i) => ({ id: i.id })),
