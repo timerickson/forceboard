@@ -19,14 +19,14 @@ export class ControlPanel extends Component {
                 <div style="flex: 1; overflow: scroll;">
                     <ul>
                         ${data.items.map(item => html`
-                            <${ItemControl} item=${item} data=${data} />
+                            <${ItemControl} key=${item.id} item=${item} data=${data} />
                         `)}
                     </ul>
                 </div>
                 <div style="flex: 1; overflow: scroll;">
                     <ul>
                         ${data.relationships.map(rel => html`
-                            <${RelationshipControl} relationship=${rel} data=${data} />
+                            <${RelationshipControl} key=${rel.id} relationship=${rel} data=${data} />
                         `)}
                     </ul>
                 </div>

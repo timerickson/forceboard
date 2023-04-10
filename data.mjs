@@ -97,7 +97,7 @@ export class Data {
             throw new Error(`item ${id} not found in items`);
         }
         if (!(id in this.itemRelationships)) {
-            throw new Error(`relatiionships not found for item ${id}`);
+            throw new Error(`relationships not found for item ${id}`);
         }
         this.itemRelationships[id].forEach(relationship => {
             this.removeRelationship(relationship.id);

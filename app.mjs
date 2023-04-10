@@ -3,9 +3,7 @@ import { Graph } from 'graph';
 import { Data } from 'data';
 import { ControlPanel } from 'controlPanel';
 import { CommandBar } from 'commandBar';
-import {
-    DataChanged
-} from 'events';
+import { DataChanged } from 'events';
 
 class App extends Component {
     constructor(props) {
