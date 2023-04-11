@@ -1,9 +1,9 @@
+- graph node labels
 - highlight item (in list) on mouseover (on graph)
 - highlight relationship (in list) on mouseover (on graph)
 - highlight relationship (on graph) on mouseover (in list)
 - default item (size, charge, color)
 - default relationship (length, color)
-- graph node labels
 - s (search) item/relationship/tag
 - t (tag) item
 - t (tag) relationship

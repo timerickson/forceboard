@@ -3,15 +3,13 @@ import { makeItem } from 'data';
 import { injectTestCommands } from 'test';
 
 export class CommandBar extends Component {
-    constructor(props) {
-        super(props);
-
-        this.setState({
-            input: "",
-        }, () => this.focusInput());
+    state = {
+        input: ""
     }
-
-    textInput = null
+    
+    // constructor(props) {
+    //     super(props);
+    // }
 
     componentDidMount() {
         try {
@@ -24,25 +22,16 @@ export class CommandBar extends Component {
             }
         }
     }
-    
-    focusInput = () => {
-        if (this.textInput) {
-            this.textInput.focus();
-        } else {
-            console.warn("unable to focusInput");
-        }
-    }
 
     onCommandInput = (ev) => {
         // console.log('onCommandInput', ev.target.value, this);
-        this.textInput = ev.target;
         this.setState({
             input: ev.target.value
         });
     }
 
     onKeyUp = ev => {
-        this.textInput = ev.target;
+        // this.textInput = ev.target;
         if (ev.key === 'Enter') {
             this.processCommand();
         }
@@ -75,9 +64,7 @@ export class CommandBar extends Component {
             console.error('InvalidArguments: d', args);
             return;
         }
-        const newItem = makeItem(args[0]);
-        // console.debug('declareItem', this.props, newItem);
-        this.props.data.addItem(newItem);
+        this.props.data.addItem(makeItem(args[0]));
     }
 
     relateItems(args) {
