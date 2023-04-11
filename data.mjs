@@ -91,7 +91,6 @@ export class Data {
         if (!(id in this.itemMap)) {
             throw new Error(`item ${id} not found`);
         }
-        const item = this.itemMap[id];
         const idx = this.items.findIndex(i => i.id === id);
         if (idx === -1) {
             throw new Error(`item ${id} not found in items`);
@@ -99,7 +98,8 @@ export class Data {
         if (!(id in this.itemRelationships)) {
             throw new Error(`relationships not found for item ${id}`);
         }
-        this.itemRelationships[id].forEach(relationship => {
+
+        this.itemRelationships[id].slice().forEach(relationship => {
             this.removeRelationship(relationship.id);
         });
         this.items.splice(idx, 1);
@@ -109,16 +109,17 @@ export class Data {
     }
 
     removeItemRelationship(itemId, relationshipId) {
+        // console.debug('removeItemRelationship', itemId, relationshipId);
         if (!(itemId in this.itemRelationships)) {
             console.error('relMap', this.itemRelationships);
             throw new Error(`removeItemRelationship : id ${itemId} not found in relationshipMap`);
         }
         const relationships = this.itemRelationships[itemId];
-        console.debug(`item ${itemId} relationships`, relationships);
         const idx = relationships.findIndex(r => r.id === relationshipId);
         if (idx === -1) {
             throw new Error(`removeItemRelationship : relationship ${relationshipId} not found in item ${itemId} relationships`);
         }
+
         relationships.splice(idx, 1);
         this.stateId++;
     }
@@ -127,13 +128,14 @@ export class Data {
         if (!(id in this.relationshipMap)) {
             throw new Error(`removeRelationship : id ${id} not found`);
         }
-        const relationship = this.relationshipMap[id];
-        this.removeItemRelationship(relationship.a.id, relationship.id);
-        this.removeItemRelationship(relationship.b.id, relationship.id);
         const idx = this.relationships.findIndex(r => r.id === id);
         if (idx === -1) {
             throw new Error(`removeRelationship : relationship ${id} not found`);
         }
+        const relationship = this.relationshipMap[id];
+
+        this.removeItemRelationship(relationship.a.id, relationship.id);
+        this.removeItemRelationship(relationship.b.id, relationship.id);
         this.relationships.splice(idx, 1);
         delete this.relationshipMap[id];
         this.stateId++;
