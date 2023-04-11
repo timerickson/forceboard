@@ -16,12 +16,9 @@ class App extends Component {
         // console.log('App.render', arguments);
         const data = this.data;
         return html`
-            <div style="display: flex; flex-direction: column; flex: 1; overflow: auto;">
-                <div style="height: 30px;">
-                    <h1>Diagram</h1>
-                </div>
-                <${Graph} data=${data} style="flex: 1;"><//>
-                <div style="max-height: 20vh; display: flex; flex-direction: column; overflow: auto;">
+            <div class=app>
+                <${Graph} data=${data}><//>
+                <div class=bottom-pane>
                     <${CommandBar} data=${data} />
                     <${ControlPanel} data=${data} />
                 </div>
