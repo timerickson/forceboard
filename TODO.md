@@ -1,4 +1,3 @@
-- graph node labels
 - highlight item (in list) on mouseover (on graph)
 - highlight relationship (in list) on mouseover (on graph)
 - highlight relationship (on graph) on mouseover (in list)
@@ -12,6 +11,7 @@
 - props view of items (treeview)
 - hosted example
 - favicon
+- control to toggle graph node labels
 
 BUGS:
 - can add duplicate relationship id

@@ -122,7 +122,6 @@ export class Graph extends EventSubscribingComponent {
 
     initSimulation() {
         let invalidation = new Promise((res, rej)=>{});
-        // let nodeTitle = undefined;
 
         // const nodeId = (d) => d.id;
         // const N = d3.map(nodes)
@@ -148,11 +147,11 @@ export class Graph extends EventSubscribingComponent {
         let node = svg.append("g")
             .attr("stroke", "#fff")
             .attr("stroke-width", 1.5)
-            .selectAll("circle");
+            .selectAll("g");
 
         function ticked() {
-            node.attr("cx", d => d.x)
-                .attr("cy", d => d.y)
+            // console.debug('tick', node.size(), link.size());
+            node.attr("transform", function (d, i) {return `translate(${d.x},${d.y})`});
 
             link.attr("x1", d => d.source.x)
                 .attr("y1", d => d.source.y)
@@ -215,19 +214,22 @@ export class Graph extends EventSubscribingComponent {
 
                 node = node
                     .data(nodes, d => d.id)
-                    .join(enter => enter.append("circle")
-                        .attr("r", 10)
-                        .attr("fill", d => color(d.id))
-                        .on('mouseenter', function (e, item) {
-                            ItemSelected.fire(item.id);
-                        })
-                        .on('mouseleave', function (e, item) {
-                            ItemDeselected.fire(item.id);
-                        })
-                        .call(drag(simulation))
-                    );
-
-                // if (true) node.append("title").text(({index: i}) => T[i]);
+                    .join(enter => {
+                        const g = enter.append("g");
+                        g.append("circle")
+                            .attr("r", 10)
+                            .attr("fill", d => color(d.id))
+                            .on('mouseenter', function (e, item) {
+                                ItemSelected.fire(item.id);
+                            })
+                            .on('mouseleave', function (e, item) {
+                                ItemDeselected.fire(item.id);
+                            })
+                        g.append("text").text((d) => d.id).attr('x', 15).style('fill', 'black').style('font', 'bold 30px sans-serif');
+                        g.call(drag(simulation));
+                        // if you don't return this, you will be sad :-(
+                        return g;
+                    });
 
                 link = link
                     .data(links, d => `${d.source.id}\t${d.target.id}`)
