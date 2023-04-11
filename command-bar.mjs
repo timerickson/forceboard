@@ -6,10 +6,6 @@ export class CommandBar extends Component {
     state = {
         input: ""
     }
-    
-    // constructor(props) {
-    //     super(props);
-    // }
 
     componentDidMount() {
         try {
@@ -31,7 +27,6 @@ export class CommandBar extends Component {
     }
 
     onKeyUp = ev => {
-        // this.textInput = ev.target;
         if (ev.key === 'Enter') {
             this.processCommand();
         }
@@ -53,6 +48,9 @@ export class CommandBar extends Component {
             default:
                 this.unknownCommand(cmd, args);
         }
+        this.setState({
+            input: ''
+        });
     }
 
     unknownCommand(cmd, args) {
@@ -77,8 +75,8 @@ export class CommandBar extends Component {
 
     render(_, { input }) {
         return html`
-            <div>
-                <input type="text" onInput=${this.onCommandInput} onKeyUp=${this.onKeyUp} value=${input} autofocus/>
+            <div class=command-bar>
+                <input type="text" onInput=${this.onCommandInput} onKeyUp=${this.onKeyUp} value=${input} autofocus />
                 <button onClick=${this.processCommand}>Enter</button>
             </div>
         `

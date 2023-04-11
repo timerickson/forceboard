@@ -27,33 +27,14 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 export class Graph extends EventSubscribingComponent {
-    // https://github.com/preactjs/preact/wiki/External-DOM-Mutations
 
-    constructor(props) {
-        super(props);
-        // console.debug('Graph', arguments)
-    
-        DataChanged.subscribe(() => this.updateGraph());
-    }
-
-    shouldComponentUpdate(newProps = {}, _) {
-        let oldStateId = this.state.dataStateId;
-        let newStateId = newProps.data.stateId;
-        const changed = (oldStateId != newStateId);
-
-        // console.debug('shouldComponentUpdate changed', changed, newStateId, oldStateId, arguments);
-        if (changed) {
-            this.setState({
-                dataStateId: newStateId
-            }, () => this.updateGraph());
-        }
-
+    shouldComponentUpdate() {
         // https://github.com/preactjs/preact/wiki/External-DOM-Mutations
         // do not re-render via diff:
         return false;
     }
 
-    // includes the buffer/padding so we don't have to worry about that latter
+    // includes the buffer/padding so we don't have to worry about that later
     contentExtent = { xMin: -100, xMax: 100, yMin: -75, yMax: 75 }
 
     collectContentExtent(node) {
@@ -112,7 +93,6 @@ export class Graph extends EventSubscribingComponent {
         this.svg = this.initSimulation();
         this.base.appendChild(this.svg);
 
-        const svg = this.svg;
         const resizeObserver = new ResizeObserver((entries) => {
             let resizes = 0;
             for (const entry of entries) {
@@ -137,6 +117,7 @@ export class Graph extends EventSubscribingComponent {
         resizeObserver.observe(this.base);
 
         this.updateGraph();
+        DataChanged.subscribe(() => this.updateGraph());
     }
 
     initSimulation() {
@@ -257,7 +238,7 @@ export class Graph extends EventSubscribingComponent {
 
     render() {
         return html`
-            <div id="d3target" style="flex: 1; line-height: 0;"></div>
+            <div id="d3target" class=graph></div>
         `;
     }
 

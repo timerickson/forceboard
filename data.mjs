@@ -30,7 +30,7 @@ export class Data {
     itemRelationships = {}
     relationships = []
     relationshipMap = {}
-    stateId = 0
+    // stateId = 0
 
     getItem(id) {
         if (!id) {
@@ -58,7 +58,7 @@ export class Data {
         this.items.push(item);
         this.itemMap[id] = item;
         this.itemRelationships[id] = [];
-        this.stateId++;
+        // this.stateId++;
         this.onChanged();
     }
 
@@ -80,7 +80,7 @@ export class Data {
         this.itemRelationships[idB].push(relationship);
         this.relationships.push(relationship);
         this.relationshipMap[id] = relationship;
-        this.stateId++;
+        // this.stateId++;
         this.onChanged();
     }
 
@@ -104,7 +104,7 @@ export class Data {
         });
         this.items.splice(idx, 1);
         delete this.itemMap[id];
-        this.stateId++;
+        // this.stateId++;
         this.onChanged();
     }
 
@@ -121,7 +121,7 @@ export class Data {
         }
 
         relationships.splice(idx, 1);
-        this.stateId++;
+        // this.stateId++;
     }
 
     removeRelationship(id) {
@@ -138,7 +138,7 @@ export class Data {
         this.removeItemRelationship(relationship.b.id, relationship.id);
         this.relationships.splice(idx, 1);
         delete this.relationshipMap[id];
-        this.stateId++;
+        // this.stateId++;
         this.onChanged();
     }
 }
