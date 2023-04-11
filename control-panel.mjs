@@ -17,6 +17,11 @@ export class ControlPanel extends Component {
             <div style="flex: 1; display: flex; overflow: auto;">
                 <!-- https://stackoverflow.com/questions/21515042/scrolling-a-flexbox-with-overflowing-content -->
                 <div style="flex: 1; overflow: scroll;">
+                    <h3>selection</h3>
+                    <${SelectedControl} data=${data} />
+                </div>
+                <div style="flex: 1; overflow: scroll;">
+                    <h3>items</h3>
                     <ul>
                         ${data.items.map(item => html`
                             <${ItemControl} key=${item.id} item=${item} data=${data} />
@@ -24,14 +29,12 @@ export class ControlPanel extends Component {
                     </ul>
                 </div>
                 <div style="flex: 1; overflow: scroll;">
+                    <h3>relationships</h3>
                     <ul>
                         ${data.relationships.map(rel => html`
                             <${RelationshipControl} key=${rel.id} relationship=${rel} data=${data} />
                         `)}
                     </ul>
-                </div>
-                <div style="flex: 1; overflow: scroll;">
-                    <${SelectedControl} data=${data} />
                 </div>
             </div>
         `
