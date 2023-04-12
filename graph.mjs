@@ -94,12 +94,8 @@ export class Graph extends EventSubscribingComponent {
         this.base.appendChild(this.svg);
 
         const resizeObserver = new ResizeObserver((entries) => {
-            let resizes = 0;
             for (const entry of entries) {
                 if (entry.borderBoxSize?.length > 0) {
-                    if (++resizes > 1) {
-                        console.warn('ResizeObserver multiple calls');
-                    }
                     this.updateSvgLayoutAttributes();
                     // this.updateSvgLayoutAttributes({
                     //   width: entry.borderBoxSize[0].inlineSize,

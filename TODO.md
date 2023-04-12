@@ -1,17 +1,13 @@
-- highlight item (in list) on mouseover (on graph)
-- highlight relationship (in list) on mouseover (on graph)
-- highlight relationship (on graph) on mouseover (in list)
 - default item (size, charge, color)
 - default relationship (length, color)
 - s (search) item/relationship/tag
 - t (tag) item
 - t (tag) relationship
 - directional relationships (arrows)
-- virtual relationships (no force) can be done with custom rel mods (forceFactor 0)
 - props view of items (treeview)
-- hosted example
 - favicon
 - control to toggle graph node labels
+- virtual relationships (no force) can be done with custom rel mods (forceFactor 0)
 
 BUGS:
 - can add duplicate relationship id
@@ -26,6 +22,7 @@ TECH_DEBT:
 NICE_TO_HAVE:
 - import data
 - export data
+- hosted example
 - node image library
 - custom node shape
 - custom node image
@@ -34,6 +31,9 @@ NICE_TO_HAVE:
 - custom (stronger) forceX/Y
 - custom (variable) forceLink
 - pan/zoom
+- highlight item (in list) on mouseover (on graph)
+- highlight relationship (in list) on mouseover (on graph)
+- highlight relationship (on graph) on mouseover (in list)
 
 FUTURE
 - NRT (data feed a la dynamic monitoring of traffic)

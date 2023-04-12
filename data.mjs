@@ -54,6 +54,9 @@ export class Data {
 
     addItem(item) {
         const id = itemId(item);
+        if (id in this.itemMap) {
+            throw new Error(`item ${id} already exists`);
+        }
 
         this.items.push(item);
         this.itemMap[id] = item;
@@ -75,6 +78,9 @@ export class Data {
             throw new Error(`item with idB ${idB} not found`);
         }
         const id = relationshipId(a, b);;
+        if (id in this.relationshipMap) {
+            throw new Error(`relationship ${id} already exists`);
+        }
         const relationship = { "a": a, "b": b, "id": `${id}` };
         this.itemRelationships[idA].push(relationship);
         this.itemRelationships[idB].push(relationship);
