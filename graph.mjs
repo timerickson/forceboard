@@ -140,6 +140,7 @@ export class Graph extends EventSubscribingComponent {
             .attr("stroke-width", 1.5)
             .selectAll("line");
 
+        // https://stackoverflow.com/questions/20644415/d3-appending-text-to-a-svg-rectangle
         let node = svg.append("g")
             .attr("stroke", "#fff")
             .attr("stroke-width", 1.5)
