@@ -1,22 +1,20 @@
 - default item (size, charge, color)
 - default relationship (length, color)
-- s (search) item/relationship/tag
-- t (tag) item
-- t (tag) relationship
 - directional relationships (arrows)
+- t (tag) item
 - props view of items (treeview)
+- s (search) item/relationship/tag
+- t (tag) relationship
 - favicon
 - control to toggle graph node labels
 - virtual relationships (no force) can be done with custom rel mods (forceFactor 0)
 
 BUGS:
-- can add duplicate relationship id
 
 TECH_DEBT:
+- move inline styles to stylesheet
 - peg preact/htm version (standalone)
 - make buffer value dynamic in Graph.componentDidMount.updateSvgLayoutAttributes
-- Update Graph layout via https://preactjs.com/guide/v10/hooks#uselayouteffect
-- move inline styles to stylesheet
 - move per-node handlers in graph to parent element handlers using event.target (??)
 
 NICE_TO_HAVE:
