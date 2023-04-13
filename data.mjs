@@ -1,13 +1,53 @@
+import * as d3 from 'd3';
+
+export class Item {
+    constructor(val) {
+        this.id = (typeof(val) === 'string') ?
+            val :
+            itemId(val);
+        this.value = val;
+
+        let _size = undefined;
+        this.size = (s) => {
+            if (s !== undefined) {
+                _size = s;
+                return;
+            }
+            if (_size === undefined) {
+                return Item.defaults.size;
+            }
+            return (typeof(_size) === 'function') ? _size.apply(this) : _size;
+        }
+
+        let _color = undefined;
+        this.color = (c) => {
+            if (c !== undefined) {
+                _color = c;
+                return;
+            }
+            if (_color === undefined) {
+                return Item.defaults.color(this.id);
+            }
+            return (typeof(_color) === 'function') ? _color.apply(this) : _color;
+        };
+    }
+
+    static defaults = {
+        size: 10,
+        color: d3.scaleOrdinal(d3.schemeTableau10)
+    }
+}
+
 export const makeItem = function(val) {
-    return { "id": val.toString(), "item": val };
+    return new Item(val);
 }
 
 function itemId(item) {
     if (!item['id']) {
         throw new Error(`item must have an id (prop or fn): ${item}`);
     }
-    const ref = item['id'];
-    return (typeof(ref) === 'function') ? ref.apply(item) : ref.toString();
+    const id = item['id'];
+    return (typeof(id) === 'function') ? id.apply(item) : id.toString();
 }
 
 function relationshipId(a, b) {

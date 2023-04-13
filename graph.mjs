@@ -1,9 +1,11 @@
 import { html } from 'preact';
+import { Item } from 'data';
 import {
     EventSubscribingComponent,
     ItemSelected,
     ItemDeselected,
-    DataChanged
+    DataChanged,
+    ConfigChanged
 } from './events.mjs';
 import * as d3 from "d3";
 
@@ -43,10 +45,10 @@ export class Graph extends EventSubscribingComponent {
         let yMin = 0;
         let yMax = 0;
         node.data().forEach((d, _) => {
-            xMin = Math.min(xMin, d.x);
-            xMax = Math.max(xMax, d.x);
-            yMin = Math.min(yMin, d.y);
-            yMax = Math.max(yMax, d.y);
+            xMin = Math.min(xMin, d.x) - (d.size() / 2.0);
+            xMax = Math.max(xMax, d.x) + (d.size() / 2.0);
+            yMin = Math.min(yMin, d.y) - (d.size() / 2.0);
+            yMax = Math.max(yMax, d.y) + (d.size() / 2.0);
         });
         const halfBuffer = this.buffer / 2.0;
         this.contentExtent = {
@@ -114,6 +116,7 @@ export class Graph extends EventSubscribingComponent {
 
         this.updateGraph();
         DataChanged.subscribe(() => this.updateGraph());
+        ConfigChanged.subscribe(() => this.updateGraph());
     }
 
     initSimulation() {
@@ -185,11 +188,11 @@ export class Graph extends EventSubscribingComponent {
         }, 2000);
 
         ItemSelected.subscribe((id) => {
-            node.filter((d) => d.id === id).transition().duration(100).attr('r', '20');
+            node.filter((d) => d.id === id).transition().duration(100).select('circle').attr('r', d => (2 * d.size()));
         });
 
         ItemDeselected.subscribe((id) => {
-            node.filter((d) => d.id === id).transition().duration(100).attr('r', '10');
+            node.filter((d) => d.id === id).transition().duration(100).select('circle').attr('r', (d) => '' + d.size());
         });
 
         invalidation.then(() => simulation.stop());
@@ -199,11 +202,11 @@ export class Graph extends EventSubscribingComponent {
             update({nodes, links}) {
                 // console.log('svg.update', arguments);
 
-                // Make a shallow copy to protect against mutation, while
-                // recycling old nodes to preserve position and velocity.
-                const old = new Map(node.data().map(d => [d.id, d]));
-                nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
-                links = links.map(d => Object.assign({}, d));
+                // // Make a shallow copy to protect against mutation, while
+                // // recycling old nodes to preserve position and velocity.
+                // const old = new Map(node.data().map(d => [d.id, d]));
+                // nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
+                // links = links.map(d => Object.assign({}, d));
 
                 simulation.nodes(nodes);
                 simulation.force("link").links(links);
@@ -214,18 +217,26 @@ export class Graph extends EventSubscribingComponent {
                     .join(enter => {
                         const g = enter.append("g");
                         g.append("circle")
-                            .attr("r", 10)
-                            .attr("fill", d => color(d.id))
+                            .attr("r", d => d.size())
+                            .attr("fill", d => d.color())
                             .on('mouseenter', function (e, item) {
                                 ItemSelected.fire(item.id);
                             })
                             .on('mouseleave', function (e, item) {
                                 ItemDeselected.fire(item.id);
                             })
-                        g.append("text").text((d) => d.id).attr('x', 15).style('fill', 'black').style('font', 'bold 30px sans-serif');
+                        g.append("text").text((d) => d.id).attr('x', d => d.size() + 5).style('fill', 'black').style('font', 'bold 30px sans-serif');
                         g.call(drag(simulation));
                         // if you don't return this, you will be sad :-(
                         return g;
+                    }, update => {
+                        update.select("circle")
+                            .attr("r", d => d.size())
+                            .attr("fill", d => d.color());
+                        update.select("text")
+                            .attr("x", d => d.size() + 5)
+                            .text(d => d.id);
+                        return update;
                     });
 
                 link = link
@@ -245,7 +256,7 @@ export class Graph extends EventSubscribingComponent {
         // console.debug('Graph.updateGraph');
         const { items, relationships } = this.props.data;
         this.svg.update({
-            "nodes": items.map((i) => ({ id: i.id })),
+            "nodes": items,
             "links": relationships.map((r) => ({ source: r.a.id, target: r.b.id }))
         });
     }

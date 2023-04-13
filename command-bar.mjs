@@ -11,7 +11,7 @@ export class CommandBar extends Component {
     }
 
     componentDidMount() {
-        console.log('CommandBar.componentDidMount');
+        // console.log('CommandBar.componentDidMount');
         try {
             injectTestCommands((cmd) => this.processCommand(cmd));
         } catch (error) {
@@ -21,7 +21,6 @@ export class CommandBar extends Component {
                 throw error;
             }
         }
-        console.log('CommandBar.componentDidMount 2');
         const resizeObserver = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 if (entry.borderBoxSize?.length > 0) {

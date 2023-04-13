@@ -59,6 +59,7 @@ const ItemDeselected = new Event('ItemDeselected');
 const RelationshipSelected = new Event('RelationshipSelected');
 const RelationshipDeselected = new Event('RelationshipDeselected');
 const DataChanged = new Event('DataChanged');
+const ConfigChanged = new Event('ConfigChanged');
 
 export {
     EventSubscribingComponent,
@@ -66,5 +67,6 @@ export {
     ItemDeselected,
     RelationshipSelected,
     RelationshipDeselected,
-    DataChanged
+    DataChanged,
+    ConfigChanged
 };
