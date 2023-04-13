@@ -1,8 +1,13 @@
 import { html } from 'preact';
+import { Types } from 'data';
 import {
     EventSubscribingComponent,
-    RelationshipSelected,
-    RelationshipDeselected
+    relationshipData,
+    Enter,
+    Leave,
+    Click,
+    Selected,
+    Deselected
 } from "events";
 
 export class RelationshipControl extends EventSubscribingComponent {
@@ -10,39 +15,44 @@ export class RelationshipControl extends EventSubscribingComponent {
         super(props);
     
         this.removeRelationship = () => {
-            RelationshipDeselected.fire(props.relationship.id);
-            props.data.removeRelationship(props.relationship.id);
+            const id = props.relationship.id;
+            Leave.fire(relationshipData(id));
+            Deselected.fire(relationshipData(id))
+            props.data.removeRelationship(id);
         };
 
-        this.subscribe(RelationshipSelected, (id) => this.onRelationshipSelected(id));
-        this.subscribe(RelationshipDeselected, (id) => this.onRelationshipDeselected(id))
+        this.subscribe(Selected, (d) => this.onSelected(d));
+        this.subscribe(Deselected, (d) => this.onDeselected(d))
     }
 
-    isMyRelationship(id) {
-        return id === this.props.relationship.id;
+    isMyRelationship(d) {
+        return d.type === Types.RELATIONSHIP && d.id === this.props.relationship.id;
     }
 
-    onRelationshipSelected(id) {
-        if (!this.isMyRelationship(id)) {
+    onSelected(d) {
+        if (!this.isMyRelationship(d)) {
             return;
         }
-        // console.debug(`NOT IMPLEMENTED: RelationshipControl ${id} onRelationshipSelected`);
+        // console.debug(`NOT IMPLEMENTED: RelationshipControl ${id} onSelected`);
     }
 
-    onRelationshipDeselected(id) {
-        if (!this.isMyRelationship(id)) {
+    onDeselected(d) {
+        if (!this.isMyRelationship(d)) {
             return;
         }
-        // console.debug(`NOT IMPLEMENTED: RelationshipControl ${id} onRelationshipDeselected`);
+        // console.debug(`NOT IMPLEMENTED: RelationshipControl ${id} onDeselected`);
     }
 
     render({ relationship }) {
+        const { id } = relationship;
+        const eventData = relationshipData(id);
         return html`
             <li
-                onmouseenter=${() => RelationshipSelected.fire(relationship.id)}
-                onmouseleave=${() => RelationshipDeselected.fire(relationship.id)}
-                key=${relationship.id}>${relationship.id}
-                <button onClick=${() => this.removeRelationship(relationship.id)}>x<//>
+                onmouseenter=${() => Enter.fire(eventData)}
+                onmouseleave=${() => Leave.fire(eventData)}
+                onclick=${() => Click.fire(eventData)}
+                key=${id}>${id}
+                <button onClick=${() => this.removeRelationship(id)}>x<//>
             </li>
         `;
     }

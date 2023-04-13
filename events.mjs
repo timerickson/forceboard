@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import { Types } from 'data';
 
 class EventSubscribingComponent extends Component {
     constructor() {
@@ -26,11 +27,15 @@ class Subscription {
 }
 
 class Event {
-    constructor(name) {
+    constructor(name, stopPropagation = false) {
         this.name = name;
         const callbacks = [];
 
-        this.fire = (data) => {
+        this.fire = (data, e) => {
+            if (e && stopPropagation) {
+                // console.log('stopPropagation')
+                e.stopPropagation();
+            }
             // console.log(`Event: ${name} :: ${data}`);
             callbacks.forEach(c => {
                 // console.log(`Event notification: ${name} :: ${c}`);
@@ -54,19 +59,44 @@ class Event {
     }
 }
 
-const ItemSelected = new Event('ItemSelected');
-const ItemDeselected = new Event('ItemDeselected');
-const RelationshipSelected = new Event('RelationshipSelected');
-const RelationshipDeselected = new Event('RelationshipDeselected');
+function eventData(type, id) {
+    return { "type": type, "id": id };
+}
+
+function windowData() {
+    return eventData(Types.WINDOW, undefined);
+}
+
+function itemData(id) {
+    return eventData(Types.ITEM, id);
+}
+
+function relationshipData(id) {
+    return eventData(Types.RELATIONSHIP, id);
+}
+
+const Enter = new Event('Enter');
+const Leave = new Event('Leave');
+const Click = new Event('Click', true);
+const Selected = new Event('Selected');
+const Deselected = new Event('Deselected');
+const Pinned = new Event('Pinned');
+const Unpinned = new Event('Unpinned');
 const DataChanged = new Event('DataChanged');
 const ConfigChanged = new Event('ConfigChanged');
 
 export {
     EventSubscribingComponent,
-    ItemSelected,
-    ItemDeselected,
-    RelationshipSelected,
-    RelationshipDeselected,
+    windowData,
+    itemData,
+    relationshipData,
+    Enter,
+    Leave,
+    Click,
+    Selected,
+    Deselected,
+    Pinned,
+    Unpinned,
     DataChanged,
     ConfigChanged
 };

@@ -1,5 +1,11 @@
 import * as d3 from 'd3';
 
+export const Types = {
+    WINDOW: 'window',
+    ITEM: 'item',
+    RELATIONSHIP: 'relationship'
+};
+
 export class Item {
     constructor(val) {
         this.id = (typeof(val) === 'string') ?

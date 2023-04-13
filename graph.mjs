@@ -1,9 +1,14 @@
 import { html } from 'preact';
-import { Item } from 'data';
+import { Item, Types } from 'data';
 import {
     EventSubscribingComponent,
-    ItemSelected,
-    ItemDeselected,
+    itemData,
+    relationshipData,
+    Enter,
+    Leave,
+    Click,
+    Selected,
+    Deselected,
     DataChanged,
     ConfigChanged
 } from './events.mjs';
@@ -187,12 +192,16 @@ export class Graph extends EventSubscribingComponent {
             this.collectContentExtent(node);
         }, 2000);
 
-        ItemSelected.subscribe((id) => {
-            node.filter((d) => d.id === id).transition().duration(100).select('circle').attr('r', d => (2 * d.size()));
+        Selected.subscribe(({ type, id }) => {
+            if (type === Types.ITEM) {
+                node.filter((d) => d.id === id).transition().duration(100).select('circle').attr('r', d => (2 * d.size()));
+            }
         });
 
-        ItemDeselected.subscribe((id) => {
-            node.filter((d) => d.id === id).transition().duration(100).select('circle').attr('r', (d) => '' + d.size());
+        Deselected.subscribe(({ type, id }) => {
+            if (type === Types.ITEM) {
+                node.filter((d) => d.id === id).transition().duration(100).select('circle').attr('r', (d) => '' + d.size());
+            }
         });
 
         invalidation.then(() => simulation.stop());
@@ -220,11 +229,14 @@ export class Graph extends EventSubscribingComponent {
                             .attr("r", d => d.size())
                             .attr("fill", d => d.color())
                             .on('mouseenter', function (e, item) {
-                                ItemSelected.fire(item.id);
+                                Enter.fire(itemData(item.id));
                             })
                             .on('mouseleave', function (e, item) {
-                                ItemDeselected.fire(item.id);
+                                Leave.fire(itemData(item.id));
                             })
+                            .on('click', function (e, item) {
+                                Click.fire(itemData(item.id), e);
+                            });
                         g.append("text").text((d) => d.id).attr('x', d => d.size() + 5).style('fill', 'black').style('font', 'bold 30px sans-serif');
                         g.call(drag(simulation));
                         // if you don't return this, you will be sad :-(
@@ -240,7 +252,7 @@ export class Graph extends EventSubscribingComponent {
                     });
 
                 link = link
-                    .data(links, d => `${d.source.id}\t${d.target.id}`)
+                    .data(links, d => d.id)
                     .join("line");
             }
         });

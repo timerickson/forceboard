@@ -3,13 +3,15 @@ import { Graph } from 'graph';
 import { Data } from 'data';
 import { ControlPanel } from 'controlPanel';
 import { CommandBar } from 'commandBar';
-import { DataChanged } from 'events';
+import { Click, windowData, DataChanged } from 'events';
+import { SelectionCoordinator } from 'selectionCoordinator';
 
 class App extends Component {
     constructor(props) {
         super(props);
 
         this.data = new Data(() => DataChanged.fire());
+        this.selectionCoordinator = new SelectionCoordinator();
     }
 
     render() {
@@ -28,3 +30,4 @@ class App extends Component {
 }
 
 render(html`<${App}/>`, document.body.getElementsByTagName('main')[0]);
+window.addEventListener('click', () => {Click.fire(windowData())});

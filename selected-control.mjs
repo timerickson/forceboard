@@ -1,13 +1,9 @@
 import { html, Component } from 'preact';
 import {
-    ItemSelected,
-    ItemDeselected,
-    RelationshipSelected,
-    RelationshipDeselected
+    Selected,
+    Deselected
 } from 'events';
-
-const ITEM = 'item';
-const RELATIONSHIP = 'relationship';
+import { Types } from 'data';
 
 export class SelectedControl extends Component {
     state = {
@@ -20,40 +16,43 @@ export class SelectedControl extends Component {
 
         this.data = this.props.data;
 
-        ItemSelected.subscribe((id) => this.onItemSelected(id));
-        ItemDeselected.subscribe((id) => this.onDeselected(id));
-        RelationshipSelected.subscribe((id) => this.onRelationshipSelected(id));
-        RelationshipDeselected.subscribe((id) => this.onDeselected(id));
+        Selected.subscribe((d) => this.onSelected(d));
+        Deselected.subscribe((d) => this.onDeselected(d));
     }
 
-    onItemSelected(id) {
-        const itm = this.data.getItem(id);
+    onSelected({ type, id }) {
+        let selection;
+        if (type === Types.ITEM) {
+            selection = this.data.getItem(id);
+        } else if (type === Types.RELATIONSHIP) {
+            selection = this.data.getRelationship(id);
+        } else {
+            console.warn(`Unexpected type ${type}`);
+            return;
+        }
         this.setState({
-            selectionType: ITEM,
-            selection: this.state.selection.concat(itm)
+            selectionType: type,
+            selection: this.state.selection.concat(selection)
         });
     }
 
-    onRelationshipSelected(id) {
-        this.setState({
-            selectionType: RELATIONSHIP,
-            selection: this.state.selection.concat(this.data.getRelationship(id))
-        });
-    }
-
-    onDeselected(id) {
+    onDeselected({ id }) {
         this.setState({
             selection: this.state.selection.filter(x => x.id !== id)
         });
     }
 
     selectionName() {
-        const { selectionType, selection } = this.state;
-        return `${selectionType}${selection.length ? 's' : ''} ${selection.map(x => x.id).join(',')}`;
+        let { selectionType, selection } = this.state;
+        if (!selection.length) {
+            selectionType = 'none';
+        }
+        return `${selectionType}${(selection.length > 1) ? 's' : ''} ${selection.map(x => x.id).join(',')}`;
     }
 
     render() {
         return html`
+            <p>Selection</p>
             ${this.selectionName()}
         `;
     }

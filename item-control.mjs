@@ -1,8 +1,13 @@
 import { html } from 'preact';
+import { Types } from 'data';
 import {
     EventSubscribingComponent,
-    ItemSelected,
-    ItemDeselected
+    itemData,
+    Enter,
+    Leave,
+    Click,
+    Selected,
+    Deselected
 } from 'events';
 
 export class ItemControl extends EventSubscribingComponent {
@@ -10,39 +15,45 @@ export class ItemControl extends EventSubscribingComponent {
         super(props);
     
         this.removeItem = () => {
-            ItemDeselected.fire(props.item.id);
-            props.data.removeItem(props.item.id);
+            const id = props.item.id;
+            Deselected.fire(itemData(id));
+            Leave.fire(itemData(id));
+            props.data.removeItem(id);
         };
 
-        this.subscribe(ItemSelected, (id) => this.onItemSelected(id));
-        this.subscribe(ItemDeselected, (id) => this.onItemDeselected(id));
+        this.subscribe(Selected, (d) => this.onSelected(d));
+        this.subscribe(Deselected, (d) => this.onDeselected(d));
     }
 
-    isMyItem(id) {
-        return id === this.props.item.id;
+    isMyItem(d) {
+        return (d.type === Types.ITEM && d.id === this.props.item.id);
     }
 
-    onItemSelected(id) {
-        if (!this.isMyItem(id)) {
+    onSelected(d) {
+        if (!this.isMyItem(d)) {
             return;
         }
-        // console.debug(`NOT IMPLEMENTED: ItemControl ${id} onItemSelected`);
+        // console.debug(`NOT IMPLEMENTED: ItemControl ${d} onSelected`);
     }
 
-    onItemDeselected(id) {
-        if (!this.isMyItem(id)) {
+    onDeselected(d) {
+        if (!this.isMyItem(d)) {
             return;
         }
-        // console.debug(`NOT IMPLEMENTED: ItemControl ${id} onItemDeselected`);
+        // console.debug(`NOT IMPLEMENTED: ItemControl ${d} onDeselected`);
     }
 
     render({ item }) {
+        const { id } = item;
+        const eventData = itemData(id);
         return html`
             <li
-                onmouseenter=${() => ItemSelected.fire(item.id)}
-                onmouseleave=${() => ItemDeselected.fire(item.id)}
-                key=${item.id}>${item.id}
-                <button onClick=${() => this.removeItem(item.id)}>x<//>
+                onmouseenter=${() => Enter.fire(eventData)}
+                onmouseleave=${() => Leave.fire(eventData)}
+                onclick=${(e) => Click.fire(eventData, e)}
+                key=${id}>
+                ${id}
+                <button onClick=${() => this.removeItem(id)}>x<//>
             </li>
         `;
     }
