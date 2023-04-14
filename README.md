@@ -1,4 +1,4 @@
 Use the force(-directed graph) to simplify your diagramming!
 Now 100% less mousing required!
 
-[Online Demo](docs/index.html)
+[Online Demo](https://timerickson.github.com/forceboard/docs/index.html)
