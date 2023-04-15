@@ -1,3 +1,6 @@
+- anchor (freeze) nodes
+- relationship length
+- font size
 - props view of items (treeview)
 - s (search) item/relationship/tag
 - t (tag) relationship
