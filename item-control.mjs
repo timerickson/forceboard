@@ -17,7 +17,7 @@ export class ItemControl extends EventSubscribingComponent {
         this.removeItem = (e) => {
             e.stopPropagation();
             const id = props.item.id;
-            Deselected.fire(itemData(id));
+            // Deselected.fire(itemData(id));
             Leave.fire(itemData(id));
             props.data.removeItem(id);
         };

@@ -80,9 +80,8 @@ export const Leave = new Event('Leave');
 export const Click = new Event('Click', true);
 export const Selected = new Event('Selected');
 export const Deselected = new Event('Deselected');
-export const Pinned = new Event('Pinned');
-export const Unpinned = new Event('Unpinned');
 export const DataChanged = new Event('DataChanged');
+export const GraphUpdated = new Event('GraphUpdated');
 export const ConfigChanged = new Event('ConfigChanged');
 
 export {

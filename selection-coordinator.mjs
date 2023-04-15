@@ -1,12 +1,13 @@
 import { Types } from 'data';
 import {
+    itemData,
+    relationshipData,
     Enter,
     Leave,
     Click,
     Selected,
     Deselected,
-    Pinned,
-    Unpinned
+    GraphUpdated
 } from 'events';
 
 export class SelectionCoordinator {
@@ -16,6 +17,7 @@ export class SelectionCoordinator {
         Enter.subscribe((d) => this.onEnter(d));
         Leave.subscribe((d) => this.onLeave(d));
         Click.subscribe((d) => this.onClick(d));
+        GraphUpdated.subscribe(() => this.onGraphUpdated());
     }
 
     onEnter(d) {
@@ -36,6 +38,14 @@ export class SelectionCoordinator {
             return;
         }
         this.clearSelection();
+    }
+
+    onGraphUpdated() {
+        // TODO: Unhack this!
+        // Without this, when a node is clicked (selected by clicking),
+        // and another node is removed, the first node appears deselected
+        // because of the graph update doesn't re-apply the animation
+        this.selection.forEach(d => Selected.fire(d));
     }
 
     onClick(d) {

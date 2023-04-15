@@ -10,7 +10,8 @@ import {
     Selected,
     Deselected,
     DataChanged,
-    ConfigChanged
+    ConfigChanged,
+    GraphUpdated
 } from './events.mjs';
 import * as d3 from "d3";
 
@@ -254,6 +255,8 @@ export class Graph extends EventSubscribingComponent {
                 link = link
                     .data(links, d => d.id)
                     .join("line");
+                
+                GraphUpdated.fire();
             }
         });
     }
