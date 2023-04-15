@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+import { scaleOrdinal, schemeTableau10 } from "d3";
 
 export const Types = {
     WINDOW: 'window',
@@ -12,6 +12,8 @@ export class Item {
             val :
             itemId(val);
         this.value = val;
+
+        this.tags = [];
 
         let _size = undefined;
         this.size = (s) => {
@@ -40,7 +42,7 @@ export class Item {
 
     static defaults = {
         size: 10,
-        color: d3.scaleOrdinal(d3.schemeTableau10)
+        color: scaleOrdinal(schemeTableau10)
     }
 }
 
@@ -76,7 +78,6 @@ export class Data {
     itemRelationships = {}
     relationships = []
     relationshipMap = {}
-    // stateId = 0
 
     getItem(id) {
         if (!id) {
@@ -98,7 +99,14 @@ export class Data {
         return this.relationshipMap[id];
     }
 
+    tagItem(id, tag) {
+        // console.debug('tagItem', id, tag);
+        const item = this.getItem(id);
+        item.tags.push(tag);
+    }
+
     addItem(item) {
+        // console.debug('addItem', item);
         const id = itemId(item);
         if (id in this.itemMap) {
             throw new Error(`item ${id} already exists`);
@@ -107,21 +115,21 @@ export class Data {
         this.items.push(item);
         this.itemMap[id] = item;
         this.itemRelationships[id] = [];
-        // this.stateId++;
         this.onChanged();
     }
 
     addRelationship(idA, idB) {
+        // console.debug('addRelationship', idA, idB);
         if (idA === idB) {
             throw new Error(`ids must be different (${idA}, ${idB})`);
         }
         const a = this.itemMap[idA];
         if (!a) {
-            throw new Error(`item with idA ${idA} not found`);
+            throw new Error(`addRelationship: item ${idA} not found`);
         }
         const b = this.itemMap[idB];
         if (!b) {
-            throw new Error(`item with idB ${idB} not found`);
+            throw new Error(`addRelationship: item ${idB} not found`);
         }
         const id = relationshipId(a, b);;
         if (id in this.relationshipMap) {
@@ -132,11 +140,11 @@ export class Data {
         this.itemRelationships[idB].push(relationship);
         this.relationships.push(relationship);
         this.relationshipMap[id] = relationship;
-        // this.stateId++;
         this.onChanged();
     }
 
     removeItem(id) {
+        // console.debug('removeRelationship', id);
         if (!id) {
             throw new Error('id is required');
         }
@@ -156,7 +164,6 @@ export class Data {
         });
         this.items.splice(idx, 1);
         delete this.itemMap[id];
-        // this.stateId++;
         this.onChanged();
     }
 
@@ -173,7 +180,6 @@ export class Data {
         }
 
         relationships.splice(idx, 1);
-        // this.stateId++;
     }
 
     removeRelationship(id) {
@@ -190,7 +196,6 @@ export class Data {
         this.removeItemRelationship(relationship.b.id, relationship.id);
         this.relationships.splice(idx, 1);
         delete this.relationshipMap[id];
-        // this.stateId++;
         this.onChanged();
     }
 }

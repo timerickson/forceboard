@@ -3,7 +3,7 @@ import { getCommand } from 'commands';
 import { injectTestCommands } from 'test';
 
 const FEEDBACK_VISIBLE_CLASS = 'command-bar__feedback_visible';
-const FEEDBACK_VISIBLE_TIME_SECS = 3;
+const FEEDBACK_VISIBLE_TIME_SECS = 6;
 
 export class CommandBar extends Component {
     state = {

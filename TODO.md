@@ -1,4 +1,3 @@
-- t (tag) item
 - props view of items (treeview)
 - s (search) item/relationship/tag
 - t (tag) relationship

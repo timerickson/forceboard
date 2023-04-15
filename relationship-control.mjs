@@ -14,7 +14,8 @@ export class RelationshipControl extends EventSubscribingComponent {
     constructor(props) {
         super(props);
     
-        this.removeRelationship = () => {
+        this.removeRelationship = (e) => {
+            e.stopPropagation();
             const id = props.relationship.id;
             Leave.fire(relationshipData(id));
             Deselected.fire(relationshipData(id))
@@ -52,7 +53,7 @@ export class RelationshipControl extends EventSubscribingComponent {
                 onmouseleave=${() => Leave.fire(eventData)}
                 onclick=${() => Click.fire(eventData)}
                 key=${id}>${id}
-                <button onClick=${() => this.removeRelationship(id)}>x<//>
+                <button onClick=${(e) => this.removeRelationship(e)}>x<//>
             </li>
         `;
     }

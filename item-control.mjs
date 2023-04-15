@@ -14,7 +14,8 @@ export class ItemControl extends EventSubscribingComponent {
     constructor(props) {
         super(props);
     
-        this.removeItem = () => {
+        this.removeItem = (e) => {
+            e.stopPropagation();
             const id = props.item.id;
             Deselected.fire(itemData(id));
             Leave.fire(itemData(id));
@@ -53,7 +54,7 @@ export class ItemControl extends EventSubscribingComponent {
                 onclick=${(e) => Click.fire(eventData, e)}
                 key=${id}>
                 ${id}
-                <button onClick=${() => this.removeItem(id)}>x<//>
+                <button onClick=${(e) => this.removeItem(e)}>x<//>
             </li>
         `;
     }

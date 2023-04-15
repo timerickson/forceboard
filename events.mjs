@@ -50,7 +50,7 @@ class Event {
         }
 
         this.unsubscribe = (callback) => {
-            console.debug(`Event ${name} unsubscribe ${callback}`);
+            // console.debug(`Event ${name} unsubscribe ${callback}`);
             const idx = callbacks.indexOf(callback);
             if (idx !== -1) {
                 callbacks.splice(idx, 1);
