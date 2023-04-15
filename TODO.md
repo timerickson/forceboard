@@ -1,12 +1,12 @@
-- default item (size, charge, color)
-- default relationship (length, color)
-- directional relationships (arrows)
 - t (tag) item
 - props view of items (treeview)
 - s (search) item/relationship/tag
 - t (tag) relationship
 - favicon
 - control to toggle graph node labels
+- directional relationships (arrows)
+- default item (size, charge, color)
+- default relationship (length, color)
 - virtual relationships (no force) can be done with custom rel mods (forceFactor 0)
 
 BUGS:

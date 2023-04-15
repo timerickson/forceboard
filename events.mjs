@@ -63,40 +63,28 @@ function eventData(type, id) {
     return { "type": type, "id": id };
 }
 
-function windowData() {
+export function windowData() {
     return eventData(Types.WINDOW, undefined);
 }
 
-function itemData(id) {
+export function itemData(id) {
     return eventData(Types.ITEM, id);
 }
 
-function relationshipData(id) {
+export function relationshipData(id) {
     return eventData(Types.RELATIONSHIP, id);
 }
 
-const Enter = new Event('Enter');
-const Leave = new Event('Leave');
-const Click = new Event('Click', true);
-const Selected = new Event('Selected');
-const Deselected = new Event('Deselected');
-const Pinned = new Event('Pinned');
-const Unpinned = new Event('Unpinned');
-const DataChanged = new Event('DataChanged');
-const ConfigChanged = new Event('ConfigChanged');
+export const Enter = new Event('Enter');
+export const Leave = new Event('Leave');
+export const Click = new Event('Click', true);
+export const Selected = new Event('Selected');
+export const Deselected = new Event('Deselected');
+export const Pinned = new Event('Pinned');
+export const Unpinned = new Event('Unpinned');
+export const DataChanged = new Event('DataChanged');
+export const ConfigChanged = new Event('ConfigChanged');
 
 export {
-    EventSubscribingComponent,
-    windowData,
-    itemData,
-    relationshipData,
-    Enter,
-    Leave,
-    Click,
-    Selected,
-    Deselected,
-    Pinned,
-    Unpinned,
-    DataChanged,
-    ConfigChanged
+    EventSubscribingComponent
 };

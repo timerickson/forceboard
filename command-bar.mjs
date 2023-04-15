@@ -1,5 +1,5 @@
 import { html, Component } from 'preact';
-import { makeItem } from 'data';
+import { getCommand } from 'commands';
 import { injectTestCommands } from 'test';
 
 const FEEDBACK_VISIBLE_CLASS = 'command-bar__feedback_visible';
@@ -52,7 +52,6 @@ export class CommandBar extends Component {
         // console.debug('CommandBar.updateFeedbackDivPosition');
         const inputRect = this.inputDiv.getBoundingClientRect();
         const feedbackRect = this.feedbackDiv.getBoundingClientRect();
-        // console.debug('CommandBar.updateFeedbackDivPosition', inputRect, feedbackRect);
         this.feedbackDiv.style.left = inputRect.left + 'px';
         this.feedbackDiv.style.top = (inputRect.top - feedbackRect.height) + 'px';
     }
@@ -85,44 +84,18 @@ export class CommandBar extends Component {
 
     processCommand(cmdText = this.state.input) {
         // console.debug('processCommand', cmdText);
-        let parts = cmdText.split(' ');
-        let cmd = parts[0];
-        let args = parts.slice(1);
-        switch (cmd) {
-            case 'd':
-                this.declareItem(args);
-                break;
-            case 'r':
-                this.relateItems(args);
-                break;
-            default:
-                this.unknownCommand(cmd, args);
+        let cmd = getCommand(cmdText);
+        if (!cmd) {
+            throw new Error(`No command resolved for ${cmdText}`);
+        }
+        try {
+            cmd.exec(this.props.data);
+        } catch (ex) {
+            this.showFeedbackDiv(ex.message);
         }
         this.setState({
             input: ''
         });
-    }
-
-    unknownCommand(cmd, args) {
-        const msg = `InvalidCommand: ${cmd} ${args.join(' ')}`;
-        console.error(msg);
-        this.showFeedbackDiv(msg);
-    }
-
-    declareItem(args) {
-        if (args.length !== 1) {
-            console.error('InvalidArguments: d', args);
-            return;
-        }
-        this.props.data.addItem(makeItem(args[0]));
-    }
-
-    relateItems(args) {
-        if (args.length !== 2) {
-            console.error('InvalidArguments: r', args);
-            return;
-        }
-        this.props.data.addRelationship(args[0], args[1]);
     }
 
     render(_, { input }) {
