@@ -1,3 +1,13 @@
 .control-panel {
+    height: 200px;
+    flex: 1;
+    display: flex;
+    overflow: auto;
+}
 
+.control-panel__box {
+    flex: 1;
+    overflow: scroll;
+    border: 1px gray solid;
+    padding: 10px 20px;
 }

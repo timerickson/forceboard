@@ -32,21 +32,22 @@ export class ControlPanel extends Component {
 
     render({ data }, { itemSize }) {
         return html`
-            <div style="flex: 1; display: flex; overflow: auto;">
+            <div class=control-panel>
                 <!-- https://stackoverflow.com/questions/21515042/scrolling-a-flexbox-with-overflowing-content -->
-                <div style="flex: 1; overflow: scroll;">
+                <div class=control-panel__box>
                     <h3>selection</h3>
                     <${SelectedControl} data=${data} />
                 </div>
-                <div style="flex: 1; overflow: scroll;">
-                    <h3>items<input type=range class=slider min=0 max=100 value=${itemSize} oninput=${(e) => this.onSliderInput(e)} /></h3>
+                <div class=control-panel__box>
+                    <h3>items</h3>
+                    <p><input type=range class=slider min=0 max=100 value=${itemSize} oninput=${(e) => this.onSliderInput(e)} /></p>
                     <ul>
                         ${data.items.map(item => html`
                             <${ItemControl} key=${item.id} item=${item} data=${data} />
                         `)}
                     </ul>
                 </div>
-                <div style="flex: 1; overflow: scroll;">
+                <div class=control-panel__box>
                     <h3>relationships</h3>
                     <ul>
                         ${data.relationships.map(rel => html`
