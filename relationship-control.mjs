@@ -51,7 +51,7 @@ export class RelationshipControl extends EventSubscribingComponent {
             <li
                 onmouseenter=${() => Enter.fire(eventData)}
                 onmouseleave=${() => Leave.fire(eventData)}
-                onclick=${() => Click.fire(eventData)}
+                onclick=${(e) => Click.fire(eventData, e)}
                 key=${id}>${id}
                 <button onClick=${(e) => this.removeRelationship(e)}>x<//>
             </li>

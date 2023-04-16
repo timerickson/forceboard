@@ -1,43 +1,23 @@
 import { Types } from 'data';
 import {
-    itemData,
-    relationshipData,
     Enter,
     Leave,
     Click,
     Selected,
     Deselected,
+    SelectionChanged,
     GraphUpdated
 } from 'events';
 
 export class SelectionCoordinator {
     selection = []
+    clicked = false
 
     constructor() {
-        Enter.subscribe((d) => this.onEnter(d));
-        Leave.subscribe((d) => this.onLeave(d));
-        Click.subscribe((d) => this.onClick(d));
+        Enter.subscribe((d) => this.select(d));
+        Leave.subscribe((d) => this.deselect(d));
+        Click.subscribe((d) => this.select(d, true));
         GraphUpdated.subscribe(() => this.onGraphUpdated());
-    }
-
-    onEnter(d) {
-        // console.debug('onEnter', d);
-        if (this.selection.length) {
-            return;
-        }
-        this.select(d);
-    }
-
-    selectionWasClicked() {
-        return (this.selection.findIndex(x => x.clicked) !== -1);
-    }
-
-    onLeave(d) {
-        // console.debug('onLeave', d, this.selection);
-        if (this.selectionWasClicked()) {
-            return;
-        }
-        this.clearSelection();
     }
 
     onGraphUpdated() {
@@ -48,29 +28,48 @@ export class SelectionCoordinator {
         this.selection.forEach(d => Selected.fire(d));
     }
 
-    onClick(d) {
-        // console.debug('onClick', d);
+    select(d, wasClicked = false) {
         if (d.type === Types.WINDOW) {
-            this.clearSelection();
-        } else {
-            d.clicked = true;
-            this.select(d);
+            return this.clearSelection(); // nothing to select here
         }
-    }
-
-    select(d) {
         // console.debug('select', d);
-        if (this.select.length) {
-            this.clearSelection();
+        if (!wasClicked) {
+            if (this.selection.length) {
+                return;
+            }
+        } else {
+            if (this.selection.filter(x => x.id === d.id).length) {
+                if (!this.clicked) {
+                    this.clicked = true;
+                }
+            } else {
+                this.clearSelection();
+                this.clicked = true;
+            }
+        }
+        if (this.selection.length) { // we don't support multi-selection yet
+            return;
         }
         this.selection.push(d);
         Selected.fire(d);
+        SelectionChanged.fire([...this.selection]);
+    }
+
+    deselect(d) {
+        // console.debug('deselect', d);
+        const idx = this.selection.findIndex(x => x.id === d.id);
+        if (idx !== -1 && !this.clicked) {
+            this.selection.splice(idx, 1);
+            Deselected.fire(d)
+            SelectionChanged.fire([...this.selection]);
+        }
     }
 
     clearSelection() {
         // console.debug('clearSelection', this.selection);
-        while (this.selection.length) {
-            Deselected.fire(this.selection.pop());
-        }
+        this.clicked = false;
+        this.selection.slice().forEach(d => {
+            this.deselect(d);
+        });
     }
 }
