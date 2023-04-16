@@ -1,13 +1,10 @@
+- anchor (freeze) nodes
+  - https://stackoverflow.com/questions/10392505/fix-node-position-in-d3-force-directed-layout
 - Selection panel
-  - size
-  - color
   - charge
   - pinned
   - links
-  - labels
   - treeview
-- anchor (freeze) nodes
-  - https://stackoverflow.com/questions/10392505/fix-node-position-in-d3-force-directed-layout
 - relationship length
 - font size
 - s (search) item/relationship/tag
