@@ -1,0 +1,19 @@
+/* .selected-control {
+
+} */
+
+.selected-control__none {
+    display: none;
+}
+
+.selected-control__item {
+    display: none;
+}
+
+.selected-control__relationship {
+    display: none;
+}
+
+.selected-control__visible {
+    display: unset;
+}
