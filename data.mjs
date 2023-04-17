@@ -38,6 +38,23 @@ export class Item {
             }
             return (typeof(_color) === 'function') ? _color.apply(this) : _color;
         };
+
+        this._anchored = false;
+        this.anchored = (a) => {
+            if (a !== undefined) {
+                this._anchored = !!a;
+                if (this._anchored) {
+                    this.fx = this.x;
+                    this.fy = this.y;
+                } else {
+                    delete this.fx;
+                    delete this.fy;
+                }
+                return;
+            }
+            // console.debug('get anchored', (this._anchored), this);
+            return this._anchored;
+        };
     }
 
     static defaults = {

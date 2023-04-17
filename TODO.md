@@ -1,8 +1,9 @@
+- Selection panel
+  - anchored
 - anchor (freeze) nodes
   - https://stackoverflow.com/questions/10392505/fix-node-position-in-d3-force-directed-layout
 - Selection panel
   - charge
-  - pinned
   - links
   - treeview
 - relationship length

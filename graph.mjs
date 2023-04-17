@@ -178,9 +178,12 @@ export class Graph extends EventSubscribingComponent {
             }
             
             function dragended(event) {
+                // console.log('dragend', event.subject);
                 if (!event.active) simulation.alphaTarget(0);
-                event.subject.fx = null;
-                event.subject.fy = null;
+                if (!event.subject.anchored()) {
+                    event.subject.fx = null;
+                    event.subject.fy = null;
+                }
             }
             
             return d3.drag()

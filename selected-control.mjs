@@ -3,7 +3,7 @@ import {
     SelectionChanged
 } from 'events';
 import { Types } from 'data';
-import { ConfigChanged } from './events.mjs';
+import { ConfigChanged, DataChanged } from './events.mjs';
 
 export class SelectedControl extends Component {
     state = {
@@ -53,6 +53,14 @@ export class SelectedControl extends Component {
         return obj.tags;
     }
 
+    onClickAnchor(e) {
+        const item = this.getItem(this.state.selection[0]);
+        // console.debug('onClickAnchor', item.anchored(), e.target, !!!e.target.value);
+        item.anchored(!item.anchored());
+        this.setState({});
+        DataChanged.fire();
+    }
+
     render(_, { selection, selectionType }) {
         let selectionName = this.getSelectionName();
         switch (selectionType) {
@@ -61,6 +69,7 @@ export class SelectedControl extends Component {
                 return html`
                     <div>
                         <p>item ${item.id}</p>
+                        <p><input type=button text=anchor value=${item.anchored()} onclick=${(e) => this.onClickAnchor(e)} /></p>
                         <p>size<input type=range class=slider min=0 max=100 value=${item.size()} oninput=${(e) => this.onSliderInput(e)} /></p>
                         <p>color<input type=text value=${item.color().toString()} /></p>
                         <p>tags${this.getTagList(item).map(x => html`
