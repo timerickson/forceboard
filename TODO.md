@@ -1,13 +1,17 @@
-- Selection panel
-  - anchored
-- anchor (freeze) nodes
-  - https://stackoverflow.com/questions/10392505/fix-node-position-in-d3-force-directed-layout
-- Selection panel
+- export data
+- import data
+- default relationship length
+- Selection panel (item)
   - charge
-  - links
+  - relationshps
   - treeview
-- relationship length
+- Selection panel (rlationship)
+  - length
+  - arrows
+- hosted example
 - font size
+- fix viewArea (or just min?)
+  - set min viewArea from/to current?
 - s (search) item/relationship/tag
 - t (tag) relationship
 - favicon
@@ -26,9 +30,6 @@ TECH_DEBT:
 - move per-node handlers in graph to parent element handlers using event.target (??)
 
 NICE_TO_HAVE:
-- import data
-- export data
-- hosted example
 - node image library
 - custom node shape
 - custom node image
