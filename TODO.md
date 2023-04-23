@@ -1,7 +1,12 @@
+- Clear diagram button
 - Diagram title
 - Choose title/filename on save
 - Choose filename to load
 - default relationship length
+- directional relationships (arrows)
+- Command autocomplete (hint commands, nodes, relationships, tags)
+- Change "alpha" settings (decay, etc)
+- "Shuffle" button
 - Selection panel (item)
   - charge
   - relationshps
@@ -9,6 +14,7 @@
 - Selection panel (rlationship)
   - length
   - arrows
+- Regions (forceX/Y node (or label?) to region)
 - hosted example
 - font size
 - fix viewArea (or just min?)
@@ -17,18 +23,15 @@
 - t (tag) relationship
 - favicon
 - control to toggle graph node labels
-- directional relationships (arrows)
-- default item (size, charge, color)
+- default item (charge, color)
 - default relationship (length, color)
 - virtual relationships (no force) can be done with custom rel mods (forceFactor 0)
 
 BUGS:
 
 TECH_DEBT:
-- move inline styles to stylesheet
 - peg preact/htm version (standalone)
 - make buffer value dynamic in Graph.componentDidMount.updateSvgLayoutAttributes
-- move per-node handlers in graph to parent element handlers using event.target (??)
 
 NICE_TO_HAVE:
 - node image library
