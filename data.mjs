@@ -12,67 +12,74 @@ export class Item {
             val :
             itemId(val);
         this.value = val;
-
-        this.tags = [];
-
-        let _size = undefined;
-        this.size = (s) => {
-            if (s !== undefined) {
-                _size = s;
-                return;
-            }
-            if (_size === undefined) {
-                return Item.defaults.size;
-            }
-            return (typeof(_size) === 'function') ? _size.apply(this) : _size;
-        }
-
-        let _color = undefined;
-        this.color = (c) => {
-            if (c !== undefined) {
-                _color = c;
-                return;
-            }
-            if (_color === undefined) {
-                return Item.defaults.color(this.id);
-            }
-            return (typeof(_color) === 'function') ? _color.apply(this) : _color;
-        };
-
-        this._anchored = false;
-        this.anchored = (a) => {
-            if (a !== undefined) {
-                this._anchored = !!a;
-                if (this._anchored) {
-                    this.fx = this.x;
-                    this.fy = this.y;
-                } else {
-                    delete this.fx;
-                    delete this.fy;
-                }
-                return;
-            }
-            // console.debug('get anchored', (this._anchored), this);
-            return this._anchored;
-        };
     }
 
     static defaults = {
         size: 10,
         color: scaleOrdinal(schemeTableau10)
     }
-}
 
-export const makeItem = function(val) {
-    return new Item(val);
-}
-
-function itemId(item) {
-    if (!item['id']) {
-        throw new Error(`item must have an id (prop or fn): ${item}`);
+    clone() {
+        const clone = new Item(this.value);
+        clone.x = this.x;
+        clone.y = this.y;
+        clone.vx = this.vx;
+        clone.vy = this.vy;
+        clone.fx = this.fx;
+        clone.fy = this.fy;
+        clone.tags = this.tags;
+        clone._anchored = this._anchored;
+        clone.size(this.size());
+        clone.color(this.color());
+        return clone;
     }
-    const id = item['id'];
-    return (typeof(id) === 'function') ? id.apply(item) : id.toString();
+
+    id = undefined
+
+    value = undefined
+    
+    tags = []
+
+    _size = undefined
+    size(s) {
+        if (s !== undefined) {
+            this._size = s;
+            return;
+        }
+        if (this._size === undefined) {
+            return Item.defaults.size;
+        }
+        return (typeof(this._size) === 'function') ? this._size.apply(this) : this._size;
+    }
+
+    _color = undefined
+    color(c) {
+        if (c !== undefined) {
+            this._color = c;
+            return;
+        }
+        if (this._color === undefined) {
+            return Item.defaults.color(this.id);
+        }
+        return (typeof(this._color) === 'function') ? this._color.apply(this) : this._color;
+    };
+
+    _anchored = false
+    anchored(a) {
+        if (a !== undefined) {
+            this._anchored = !!a;
+            if (this._anchored) {
+                this.fx = this.x;
+                this.fy = this.y;
+            } else {
+                delete this.fx;
+                delete this.fy;
+            }
+            return;
+        }
+        // console.debug('get anchored', (this._anchored), this);
+        return this._anchored;
+    };
 }
 
 function relationshipId(a, b) {
@@ -82,6 +89,41 @@ function relationshipId(a, b) {
         throw new Error('b is required');
     }
     return `${itemId(a)}-${itemId(b)}`;
+}
+
+class Relationship {
+    constructor(itemA, itemB) {
+        this.a = itemA;
+        this.source = itemA;
+        this.b = itemB;
+        this.target = itemB;
+
+        this.id = relationshipId(itemA, itemB);
+    }
+
+    clone() {
+        // console.debug('Relationship.clone', this);
+        const clone = Object.assign({}, this);
+        clone.a = clone.a.id;
+        clone.b = clone.b.id;
+        clone.source = clone.source.id;
+        clone.target = clone.target.id;
+        return clone;
+    }
+
+    a = undefined
+    source = undefined
+
+    b = undefined
+    target = undefined
+}
+
+function itemId(item) {
+    if (!item['id']) {
+        throw new Error(`item must have an id (prop or fn): ${item}`);
+    }
+    const id = item['id'];
+    return (typeof(id) === 'function') ? id.apply(item) : id.toString();
 }
 
 export class Data {
@@ -95,6 +137,38 @@ export class Data {
     itemRelationships = {}
     relationships = []
     relationshipMap = {}
+
+    json(j) {
+        if (j !== undefined) {
+            return this.init(j);
+        }
+        return JSON.stringify({
+            "items": this.items.map(i => i.clone()),
+            "relationships": this.relationships.map(r => r.clone())
+        });
+    }
+
+    init(json) {
+        // console.debug('data.init', json);
+        let d = JSON.parse(json);
+        d.items.forEach(i => {
+            const item = new Item('Item.fromObject');
+            Object.assign(item, i);
+            this.addItem(item);
+        });
+
+        d.relationships.forEach(r => {
+            // console.debug('revive relationsihp', r);
+            const relationship = this.addRelationship(r.a, r.b);
+            const {a, b, source, target} = relationship;
+            Object.assign(relationship, r);
+            relationship.a = a;
+            relationship.source = source;
+            relationship.b = b;
+            relationship.target = target;
+        });
+        // console.debug('Data.init done');
+    }
 
     getItem(id) {
         if (!id) {
@@ -148,16 +222,14 @@ export class Data {
         if (!b) {
             throw new Error(`addRelationship: item ${idB} not found`);
         }
-        const id = relationshipId(a, b);;
-        if (id in this.relationshipMap) {
-            throw new Error(`relationship ${id} already exists`);
-        }
-        const relationship = { "a": a, "b": b, "id": `${id}` };
+        const relationship = new Relationship(a, b);
+
         this.itemRelationships[idA].push(relationship);
         this.itemRelationships[idB].push(relationship);
         this.relationships.push(relationship);
-        this.relationshipMap[id] = relationship;
+        this.relationshipMap[relationship.id] = relationship;
         this.onChanged();
+        return relationship;
     }
 
     removeItem(id) {

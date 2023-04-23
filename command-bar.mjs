@@ -91,11 +91,45 @@ export class CommandBar extends Component {
         try {
             cmd.exec(this.props.data);
         } catch (ex) {
+            console.error('processCommand error', ex);
             this.showFeedbackDiv(ex.message);
         }
         this.setState({
             input: ''
         });
+    }
+
+    fileName = 'test.json'
+
+    async save() {
+        // https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API#examples
+
+        const json = this.props.data.json();
+
+        // Get handle to draft file in OPFS
+        const root = await navigator.storage.getDirectory();
+        const handle = await root.getFileHandle(this.fileName, { create: true });
+        // Get sync access handle
+        console.debug('save handle', handle);
+
+        const writable = await handle.createWritable();
+        writable.truncate(0);
+
+        // Write the contents of the file to the stream.
+        await writable.write(json);
+
+        // Close the file and write the contents to disk.
+        await writable.close();
+    }
+
+    async load() {
+        // Get handle to draft file in OPFS
+        const root = await navigator.storage.getDirectory();
+        const handle = await root.getFileHandle(this.fileName, { create: false });
+        console.debug('load handle', handle);
+        let jsonBlob = await handle.getFile();
+        let json = await jsonBlob.text();
+        this.props.data.json(json);
     }
 
     render(_, { input }) {
@@ -108,6 +142,8 @@ export class CommandBar extends Component {
                     <div class=command-bar__controls>
                         <input type="text" onInput=${this.onCommandInput} onKeyUp=${this.onKeyUp} value=${input} autofocus />
                         <button onClick=${this.processCommand}>Enter</button>
+                        <div><input type=button value=save onclick=${() => this.save()} /></div>
+                        <div><input type=button value=load onclick=${() => this.load()} /></div>
                     </div>
                 </div>
             </div>

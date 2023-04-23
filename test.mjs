@@ -1,8 +1,4 @@
 let initialCommands = [
-    // 'foo',
-    // 'bar',
-    // 'baz',
-    // 'foo bar',
     'a a',
     'b',
     'c',
@@ -29,6 +25,7 @@ let initialCommands = [
     't i indigo',
     't k kilo',
     't m mary',
+
 //     'n',
 //     'o',
 //     'p',

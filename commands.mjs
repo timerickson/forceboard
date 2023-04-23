@@ -1,4 +1,4 @@
-import { makeItem } from 'data';
+import { Item } from 'data';
 
 const splitter = ' ';
 
@@ -43,7 +43,7 @@ const Add = new (class extends Command {
     exec(cmdInfo, data, name) {
         // console.debug('Add.exec', cmdInfo, data, name);
         this.validateArgLength(3, arguments, true);
-        data.addItem(makeItem(cmdInfo.remainingText));
+        data.addItem(new Item(cmdInfo.remainingText));
     }
 })();
 

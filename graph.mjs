@@ -275,7 +275,8 @@ export class Graph extends EventSubscribingComponent {
         const { items, relationships } = this.props.data;
         this.svg.update({
             "nodes": items,
-            "links": relationships.map((r) => ({ source: r.a.id, target: r.b.id }))
+            // "links": relationships.map((r) => ({ source: r.a().id, target: r.b().id }))
+            "links": relationships
         });
     }
 

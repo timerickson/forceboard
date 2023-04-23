@@ -20,7 +20,7 @@ export class SelectedControl extends Component {
     componentDidMount() {
         SelectionChanged.subscribe((d) => this.onSelectionChanged(d));
         this.base.addEventListener('click', (e) => {
-            console.debug('SelectedControl.base.click');
+            // console.debug('SelectedControl.base.click');
             e.stopPropagation();
         });
     }
@@ -68,7 +68,7 @@ export class SelectedControl extends Component {
                 let item = this.getItem(selection[0]);
                 return html`
                     <div>
-                        <p>item ${item.id}</p>
+                        <p>item ${selectionName}</p>
                         <p><input type=button text=anchor value=${item.anchored()} onclick=${(e) => this.onClickAnchor(e)} /></p>
                         <p>size<input type=range class=slider min=0 max=100 value=${item.size()} oninput=${(e) => this.onSliderInput(e)} /></p>
                         <p>color<input type=text value=${item.color().toString()} /></p>
@@ -80,13 +80,13 @@ export class SelectedControl extends Component {
             case Types.RELATIONSHIP:
                 return html`
                     <div>
-                        relationship ${selectionName()}
+                        relationship ${selectionName}
                     </div>
                 `;
             default:
                 return html`
                     <div>
-                        --- no selection ---
+                        <div>--- no selection ---</div>
                     </div>
                 `;
         }
