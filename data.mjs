@@ -1,4 +1,5 @@
 import { scaleOrdinal, schemeTableau10 } from "d3";
+import { DataChanged } from "./events.mjs";
 
 export const Types = {
     WINDOW: 'window',
@@ -137,6 +138,15 @@ export class Data {
     itemRelationships = {}
     relationships = []
     relationshipMap = {}
+
+    clear() {
+        this.items = [];
+        this.itemMap = {};
+        this.itemRelationships = {};
+        this.relationships = [];
+        this.relationshipMap = {};
+        DataChanged.fire();
+    }
 
     json(j) {
         if (j !== undefined) {

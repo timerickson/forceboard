@@ -1,10 +1,13 @@
-- Clear diagram button
-- Diagram title
-- Choose title/filename on save
-- Choose filename to load
+- "Continue" diagram (autosave + auto-relaod + temp file?)
+- Hints in command bar
+- Command autocomplete (hint commands, nodes, relationships, tags)
 - default relationship length
 - directional relationships (arrows)
-- Command autocomplete (hint commands, nodes, relationships, tags)
+- Diagram title
+- "Export"/"Download"
+- "Import"/"Upload"
+- Choose title/filename on save
+- Choose filename to load
 - Change "alpha" settings (decay, etc)
 - "Shuffle" button
 - Selection panel (item)
