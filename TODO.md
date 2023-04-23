@@ -1,3 +1,6 @@
+- Diagram title
+- Choose title/filename on save
+- Choose filename to load
 - default relationship length
 - Selection panel (item)
   - charge
