@@ -24,7 +24,7 @@ class Command {
 
     validateArgLength(len, args, moreOk = false) {
         if ((!moreOk && args.length !== len) || (moreOk && args.length < len)) {
-            console.debug('validateArgLength', len, args);
+            // console.debug('validateArgLength', len, args);
             throw new Error(`InvalidArguments: ${this.name} : ${Array.prototype.join.call(args, splitter)}`);
         }
     }

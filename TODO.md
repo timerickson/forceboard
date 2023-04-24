@@ -1,4 +1,4 @@
-- "Continue" diagram (autosave + auto-relaod + temp file?)
+- Help overlay
 - Hints in command bar
 - Command autocomplete (hint commands, nodes, relationships, tags)
 - default relationship length
@@ -8,6 +8,8 @@
 - "Import"/"Upload"
 - Choose title/filename on save
 - Choose filename to load
+- "Continue" diagram (autosave + auto-relaod + temp file?)
+- Undo/Redo
 - Change "alpha" settings (decay, etc)
 - "Shuffle" button
 - Selection panel (item)

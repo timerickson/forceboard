@@ -130,16 +130,14 @@ export class CommandBar extends Component {
     render(_, { input }) {
         return html`
             <div class=command-bar>
-                <div class="command-bar__feedback" ref=${e => this.feedbackDiv = e}>
-                    type 'foo' + [enter] to add an item
-                </div>
+                <div class="command-bar__feedback" ref=${e => this.feedbackDiv = e}></div>
                 <div class=command-bar__elements ref=${e => this.inputDiv = e}>
                     <div class=command-bar__controls>
-                        <input type="text" onInput=${this.onCommandInput} onKeyUp=${this.onKeyUp} value=${input} autofocus />
-                        <button onClick=${this.processCommand}>Enter</button>
-                        <div><input type=button value=clear onclick=${() => this.clear()} /></div>
-                        <div><input type=button value=save onclick=${() => this.save()} /></div>
-                        <div><input type=button value=load onclick=${() => this.load()} /></div>
+                        <input type="text" onInput=${this.onCommandInput} onKeyUp=${this.onKeyUp} value=${input} placeholder="foo to add" autofocus />
+                        <button onClick=${() => this.processCommand()}>Enter</button>
+                        <button onclick=${() => this.clear()}>Clear</button>
+                        <button onclick=${() => this.save()}>Save</button>
+                        <button onclick=${() => this.load()}>Load</button>
                     </div>
                 </div>
             </div>
