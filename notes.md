@@ -14,14 +14,6 @@ function getPointOnLine(a, b, distance) {
     return { x, y };
 }
 
-Enter
-Leave
-Click
 
-Selected
-Deselected
 
-Pinned
-Unpinned
-
-SelectionCoordinator
+Hints:
