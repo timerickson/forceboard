@@ -1,4 +1,3 @@
-- Help overlay
 - Hints in command bar
 - Command autocomplete (hint commands, nodes, relationships, tags)
 - default relationship length
@@ -6,6 +5,7 @@
 - Diagram title
 - "Export"/"Download"
 - "Import"/"Upload"
+- Import/Export UML
 - Choose title/filename on save
 - Choose filename to load
 - "Continue" diagram (autosave + auto-relaod + temp file?)

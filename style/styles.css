@@ -28,3 +28,22 @@ body > main {
 body > footer {
     height: 60px;
 }
+
+#help-overlay {
+    background-color: #00000030;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vh;
+    height: 100vh;
+    display: none;
+    padding: 200px;
+}
+
+#help-overlay table {
+    background-color: #EEEEEEFF;
+}
+
+#help-overlay.visible {
+    display: unset;
+}

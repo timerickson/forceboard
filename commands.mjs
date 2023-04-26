@@ -129,3 +129,5 @@ export const getCommand = (txt) => {
     };
     return info;
 }
+
+export const list = Command.list;

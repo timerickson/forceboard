@@ -76,10 +76,11 @@ export class CommandBar extends Component {
     }
 
     onKeyUp = ev => {
+        console.debug('CommandBar.onKeyUp');
         if (ev.key === 'Enter') {
             this.processCommand();
+            ev.preventDefault();
         }
-        ev.preventDefault();
     }
 
     processCommand(cmdText = this.state.input) {
