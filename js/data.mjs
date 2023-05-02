@@ -180,6 +180,14 @@ export class Data {
         // console.debug('Data.init done');
     }
 
+    itemIds() {
+        return this.items.map(i => i.id);
+    }
+
+    relationshipIds() {
+        return this.relationships.map(r => r.id);
+    }
+
     getItem(id) {
         if (!id) {
             throw new Error('id is required');

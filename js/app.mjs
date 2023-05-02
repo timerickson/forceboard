@@ -6,6 +6,7 @@ import { CommandBar } from 'commandBar';
 import { HelpOverlay } from 'helpOverlay';
 import { Click, windowData, DataChanged } from 'events';
 import { SelectionCoordinator } from 'selectionCoordinator';
+import { runTests } from 'test';
 
 class App extends Component {
     constructor(props) {
@@ -16,6 +17,7 @@ class App extends Component {
     }
 
     componentDidMount() {
+        // console.log('App.componentDidMount');
         const helpOverlayContainer = document.getElementById('help-overlay');
         if (!helpOverlayContainer) {
             return console.warn('Failed to find help overlay container');
@@ -43,3 +45,5 @@ class App extends Component {
 
 render(html`<${App}/>`, document.body.getElementsByTagName('main')[0]);
 window.addEventListener('click', () => {Click.fire(windowData())});
+
+runTests();

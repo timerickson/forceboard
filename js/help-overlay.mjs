@@ -15,7 +15,7 @@ export class HelpOverlay extends Component {
     }
 
     onKeyUp(ev) {
-        console.debug('HelpOverlay.onKeyUp', ev);
+        // console.debug('HelpOverlay.onKeyUp', ev);
         if (ev.key === 'Escape') {
             this.show(false);
             ev.preventDefault();

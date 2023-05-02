@@ -9,27 +9,31 @@
   <link rel="stylesheet" href="style/command-bar.css" />
   <link rel="stylesheet" href="style/control-panel.css" />
   <link rel="stylesheet" href="style/selected-control.css" />
+  <link rel="stylesheet" href="style/commander.css" />
   <script type="importmap">
     {
       "imports": {
-        "graph": "./graph.mjs",
-        "data": "./data.mjs",
-        "commands": "./commands.mjs",
-        "events": "./events.mjs",
-        "commandBar": "./command-bar.mjs",
-        "controlPanel": "./control-panel.mjs",
-        "selectionCoordinator": "./selection-coordinator.mjs",
-        "itemControl": "./item-control.mjs",
-        "selectedControl": "./selected-control.mjs",
-        "relationshipControl": "./relationship-control.mjs",
-        "helpOverlay": "./help-overlay.mjs",
-        "test": "./test.mjs",
+        "graph": "./js/graph.mjs",
+        "data": "./js/data.mjs",
+        "commands": "./js/commands.mjs",
+        "events": "./js/events.mjs",
+        "commander": "./js/commander.mjs",
+        "commandBar": "./js/command-bar.mjs",
+        "controlPanel": "./js/control-panel.mjs",
+        "selectionCoordinator": "./js/selection-coordinator.mjs",
+        "itemControl": "./js/item-control.mjs",
+        "selectedControl": "./js/selected-control.mjs",
+        "relationshipControl": "./js/relationship-control.mjs",
+        "helpOverlay": "./js/help-overlay.mjs",
+        "test": "./js/test.mjs",
+        "commandParser": "./js/command-parser.mjs",
         "d3": "https://cdn.jsdelivr.net/npm/d3@7/+esm",
         "preact": "https://esm.sh/htm/preact/standalone"
       }
     }
   </script>
-  <script src="app.mjs" type="module"></script>
+  <script src="lib/tagger/tagger.js"></script>
+  <script src="js/app.mjs" type="module"></script>
 </head>
 
 <body>
