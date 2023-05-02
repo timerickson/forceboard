@@ -1,5 +1,3 @@
-- Hints in command bar
-- Command autocomplete (hint commands, nodes, relationships, tags)
 - default relationship length
 - directional relationships (arrows)
 - Diagram title
