@@ -43,7 +43,7 @@ class App extends Component {
     }
 }
 
+runTests();
+
 render(html`<${App}/>`, document.body.getElementsByTagName('main')[0]);
 window.addEventListener('click', () => {Click.fire(windowData())});
-
-runTests();

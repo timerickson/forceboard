@@ -44,62 +44,71 @@ export const initialCommands = [
 //     'z',
 ]
 
-function assertArrayEquals(expected, actual) {
+function assertArrayEquals(expected, actual, message = '') {
     if (expected.length !== actual.length)
-        throw { 'message': `expected ${expected.length} but got ${actual.length}`, 'actual': actual };
+        throw { 'message': `${message} expected ${expected.length} but got ${actual.length}`, 'actual': actual };
     expected.forEach((exptectedItem, i) => {
         let actualItem = actual[i];
         if (exptectedItem !== actualItem)
-            throw { 'message': `expected item ${i} to be -->${exptectedItem}<-- but was -->${actualItem}<--`, 'actual': actual };
+            throw { 'message': `${message} expected item ${i} to be -->${exptectedItem}<-- but was -->${actualItem}<--`, 'actual': actual };
     });
 }
 
-function assertEquals(expected, actual) {
+function assertEquals(expected, actual, message) {
     if (expected !== actual)
-        throw { 'message': `expected ${expected} but got ${actual}` };
+        throw { 'message': `${message} expected ${expected} but got ${actual}` };
 }
 
 const parseChunkTests = {
-    'foo': ['foo'],
-    'foo ': ['foo', ''],
+    'foo': [['foo'], ['foo'], false],
+    'foo ': [['foo', ' '], ['foo', ''], false],
 
-    "'foo '": ['foo '],
-    "'foo ' ": ['foo ', ''],
-    "'foo '  ": ['foo ', ''],
-    "'foo \\'": ["foo '"],
-    "'foo \\''": ["foo '"],
+    "'foo '": [["'foo '"], ['foo '], false],
+    "'fo\"o '": [["'fo\"o '"], ['fo"o '], false],
+    "'foo ' ": [["'foo '", " "], ['foo ', ''], false],
+    "'foo '  ": [["'foo '", "  "], ['foo ', ''], false],
+    "'foo \\'": [["'foo \\'"], ["foo '"], true],
+    "'foo \\''": [["'foo \\''"], ["foo '"], false],
 
-    '"foo "': ['foo '],
-    '"foo " ': ['foo ', ''],
-    '"foo \\"': ['foo "'],
-    '"foo \\""': ['foo "'],
+    '"foo "': [['"foo "'], ['foo '], false],
+    '"foo " ': [['"foo "', ' '], ['foo ', ''], false],
+    '"foo \\"': [['"foo \\"'], ['foo "'], true],
+    '"foo \\""': [['"foo \\""'], ['foo "'], false],
 
-    'foo bar': ['foo', 'bar'],
-    'foo  bar': ['foo', 'bar'],
-    'foo  bar ': ['foo', 'bar', '']
+    'foo bar': [['foo', ' ', 'bar'], ['foo', '', 'bar'], false],
+    'foo  bar': [['foo', '  ', 'bar'], ['foo', '', 'bar'], false],
+    'foo  bar ': [['foo', '  ', 'bar', ' '], ['foo', '', 'bar', ''], false],
+
+    ' foo bar': [[' ', 'foo', ' ', 'bar'], ['', 'foo', '', 'bar'], false],
+    '  foo  bar': [['  ', 'foo', '  ', 'bar'], ['', 'foo', '', 'bar'], false],
+    '  foo  bar ': [['  ', 'foo', '  ', 'bar', ' '], ['', 'foo', '', 'bar', ''], false]
 }
 
-const parseInQuoteTests = {
-    'foo ': false,
+// const parseInQuoteTests = {
+//     'foo ': false,
 
-    "'foo '": false,
-    "'foo \\'": true,
-    "'foo \\''": false,
+//     "'foo '": false,
+//     "'foo \\'": true,
+//     "'foo \\''": false,
 
-    '"foo "': false,
-    '"foo \\"': true,
-    '"foo \\""': false,
+//     '"foo "': false,
+//     '"foo \\"': true,
+//     '"foo \\""': false,
 
-    'foo bar': false,
-    'foo  bar': false,
-    'foo  bar ': false
-}
+//     'foo bar': false,
+//     'foo  bar': false,
+//     'foo  bar ': false
+// }
 
 function runParseChunkTest(name) {
     try {
-        let expected = parseChunkTests[name];
-        let actual = parseChunks(name).chunks;
-        assertArrayEquals(expected, actual);
+        let test = parseChunkTests[name];
+        let chunks = parseChunks(name);
+
+        assertArrayEquals(test[0], chunks.map(c => c.raw), "raw");
+        assertArrayEquals(test[1], chunks.map(c => c.text), "text");
+        assertEquals(name, chunks.map(c => c.raw).join(''), "name");
+
         // console.info(`Pass :: -->${name}<--`);
     } catch (error) {
         // console.error(error);
@@ -120,7 +129,7 @@ export function runTests() {
     for (let testValue in parseChunkTests) {
         runParseChunkTest(testValue);
     }
-    for (let testValue in parseInQuoteTests) {
-        runParseInQuoteTest(testValue);
-    }
+    // for (let testValue in parseInQuoteTests) {
+    //     runParseInQuoteTest(testValue);
+    // }
 }

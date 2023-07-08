@@ -2,6 +2,15 @@ import { Item } from 'data';
 
 const splitter = ' ';
 
+class Parameter {
+    constructor(name, description, required, defaultValue) {
+        this.name = name;
+        this.description = description;
+        this.required = required;
+        this.defaultValue = defaultValue;
+    }
+}
+
 class Command {
     static list = []
 
@@ -9,12 +18,14 @@ class Command {
         name,
         shortcut,
         description,
-        hint
+        hint,
+        parameters = []
     ) {
         this.name = name;
         this.shortcut = shortcut;
         this.description = description;
         this.hint = hint;
+        this.parameters = parameters;
 
         if (Command.list.filter(x => x.shortcut === this.shortcut).length) {
             throw new Error(`Can't define two commands with same shortcut ${this.letter}`);
@@ -34,7 +45,7 @@ class Command {
     }
 
     prompt() {
-        return this.name;
+        return this.hint;
     }
 
     completions(data) {
@@ -50,71 +61,68 @@ function promptError(prompt) {
 
 export const Add = new (class extends Command {
     constructor() {
-        super('Add', 'a', 'Add an item', 'add hint');
+        super('Add', 'a', 'Add an item', 'add hint', [
+            new Parameter('name', 'name of item (must be unique)', true)
+        ]);
     }
 
-    exec(data, chunks) {
+    exec(data, args) {
         // console.debug('Add.exec', data, name);
-        const name = (chunks.length > 1 && chunks[0] === this.shortcut) ?
-            chunks.slice(1).join(splitter) :
-            chunks.join(splitter);
-        // this.validateArgLength(2, chunks);
+        const name = (args.length > 1 && args[0] === this.shortcut) ?
+            args.slice(1).join(splitter) :
+            args.join(splitter);
+        // this.validateArgLength(2, args);
         if (name === undefined) {
             throw promptError('name to add');
         }
         data.addItem(new Item(name));
     }
 
-    prompt(data, chunks) {
+    prompt(data, args) {
         return 'name to add';
     }
 
-    completions(data, chunks) {
+    completions(data, args) {
         return [];
-    }
-
-    segments(chunks) {
-        return (chunks.length > 1 && chunks[0] === this.shortcut) ?
-            [ this.shortcut ] :
-            [];
     }
 })();
 
 const Relate = new (class extends Command {
     constructor() {
-        super('Relate', 'r', 'Relate two items', 'hint for relate');
+        super('Relate', 'r', 'Relate two items', 'hint for relate', [
+            new Parameter('a', 'name of source/origin related item', true),
+            new Parameter('b', 'name of target/destination related item', true)
+        ]);
     }
 
-    exec(data, chunks) {
-        this.validateArgLength(3, chunks);
-        data.addRelationship(chunks[1], chunks[2]);
+    exec(data, args) {
+        this.validateArgLength(3, args);
+        data.addRelationship(args[1], args[2]);
     }
 
-    prompt(data, chunks) {
-        if (chunks.length > 2) {
+    prompt(data, args) {
+        if (args.length > 2) {
             return 'b/to/target name';
         }
 
         return 'a/from/origin name';
     }
 
-    completions(data, chunks) {
+    completions(data, args) {
         return data.itemIds();
-    }
-
-    segments(chunks) {
-        return chunks.slice(0, Math.max(1, chunks.length - 1));
     }
 })();
 
 const RemoveItem = new (class extends Command {
     constructor() {
-        super('Remove Item', 'rm', 'Remove an item', 'hint for remove item');
+        super('Remove Item', 'rm', 'Remove an item', 'hint for remove item', [
+            new Parameter('name', 'name of item to remove', true)
+        ]);
     }
 
-    exec(data, chunks) {
-        this.validateArgLength(2, chunks);
-        data.removeItem(chunks[1]);
+    exec(data, args) {
+        this.validateArgLength(2, args);
+        data.removeItem(args[1]);
     }
 
     prompt() {
@@ -128,38 +136,48 @@ const RemoveItem = new (class extends Command {
 
 const RemoveRelationship = new (class extends Command {
     constructor() {
-        super('Remove Relationship', 'rmr', 'Remove Relationship', 'hint for remove relatioship');
+        super('Remove Relationship', 'rmr', 'Remove Relationship', 'hint for remove relatioship', [
+            new Parameter('name', 'name or id of relationship to remove', true)
+        ]);
     }
 
-    exec(data, chunks) {
-        this.validateArgLength(2, chunks);
+    exec(data, args) {
+        this.validateArgLength(2, args);
         data.removeRelationship(id);
     }
 })();
 
 const Tag = new (class extends Command {
     constructor() {
-        super('Tag', 't', 'Tag an item', 'hint for tag item');
+        super('Tag', 't', 'Tag an item', 'hint for tag item', [
+            new Parameter('name', 'name of item to tag', true),
+            new Parameter('tag', 'name of tag to apply to item', true)
+        ]);
     }
 
-    exec(data, chunks) {
-        this.validateArgLength(3, chunks);
-        data.tagItem(chunks[1], chunks[2]);
+    exec(data, args) {
+        this.validateArgLength(3, args);
+        data.tagItem(args[1], args[2]);
     }
 })();
 
 const TagRelationship = new (class extends Command {
     constructor() {
-        super('Tag Relationship', 'tr', 'Tag a relationship', 'hint for tag relationship');
+        super('Tag Relationship', 'tr', 'Tag a relationship', 'hint for tag relationship', [
+            new Parameter('name', 'name or id of relationship to tag', true),
+            new Parameter('tag', 'name of tag to apply to relationship')
+        ]);
     }
 
-    exec(data, chunks) {
-        this.validateArgLength(4, chunks);
-        data.tagRelationship(chunks[1], chunks[2], chunks[3]);
+    exec(data, args) {
+        this.validateArgLength(4, args);
+        data.tagRelationship(args[1], args[2], args[3]);
     }
 })();
 
 export const list = Command.list;
+
+export const DefaultCommand = Add;
 
 export const getCommand = (txt) => {
     // console.debug('getCommand', txt);
@@ -172,23 +190,24 @@ export const getCommand = (txt) => {
 
     let cmd = matchingCommands.shift();
     if (cmd === undefined) {
-        cmd = Add;
+        cmd = DefaultCommand;
     }
-    console.debug('getCommand', txt, cmd.name);
+    // console.debug('getCommand', txt, cmd.name);
     return cmd;
 }
 
-export const getPossibleCommands = (txt) => {
-    if (!(typeof(txt) === 'string')) {
-        console.error('not string');
-        return;
+export const getPossibleCommands = (args) => {
+    const txt = args[0];
+    if (args.length > 1) {
+        return [ getCommand(txt) ];
     }
-    console.debug('getPossibleCommands', txt);
+    // console.debug('getPossibleCommands', txt);
     let prefix = '';
     if (txt !== undefined) {
         prefix = txt;
     }
-    return list.filter(
+    const matches = list.filter(
         x => (x === '') || x.shortcut.startsWith(prefix)
     );
+    return matches.length ? matches : [ DefaultCommand ];
 }
